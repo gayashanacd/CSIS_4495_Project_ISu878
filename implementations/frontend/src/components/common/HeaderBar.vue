@@ -186,43 +186,15 @@ export default {
       }
     },
     computed: {
-      entityName(){
-        const user = this.$util.getUser();
-        const parent = this.$util.getParent();
-        const institute = this.$util.getInstitute();
-        let entityStr = "";
-        if(user && user.type === "INSTITUTE" && institute){
-          entityStr = institute.name;
+        entityName(){
+            return "";
+        },
+        entityAddress(){
+            return "";
+        },
+        profileRouterPath(){
+            return "/profile";  
         }
-        else if(user && user.type === "PARENT" && parent){
-          entityStr = `${parent.firstName} ${parent.lastName}`;
-        }
-        return entityStr;
-      },
-      entityAddress(){
-        const user = this.$util.getUser();
-        const parent = this.$util.getParent();
-        const institute = this.$util.getInstitute();
-        let retrunStr = "";
-        if(user && user.type === "INSTITUTE" && institute){
-          retrunStr = institute.city;
-        }
-        else if(user && user.type === "PARENT" && parent){
-          retrunStr = parent.city;
-        }
-        return retrunStr;
-      },
-      profileRouterPath(){
-        const user = this.$util.getUser();
-        let router = "/parent";
-        if(user && user.type === "INSTITUTE"){
-          router = "/institute";
-        }
-        else if(user && user.type === "PARENT"){
-          router = "/parent";
-        }
-        return router;  
-      }
     },
     mounted() {   
       this.fetchMessages();

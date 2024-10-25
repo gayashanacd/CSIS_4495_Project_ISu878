@@ -20,7 +20,7 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <h5 class="card-title">User Infomation</h5>
-                                            <div class="row" style="margin-top: 10px;">
+                                            <div class="row">
                                                 <div class="col-md-12">
                                                     <label for="inputName" class="form-label">Name</label>
                                                     <input type="text" class="form-control" id="inputName">
@@ -53,7 +53,7 @@
                                     <div class="card">
                                     <div class="card-body">
                                         <h5 class="card-title">Water & Recycling Habits</h5>
-                                        <div class="row" style="margin-top: 10px;">
+                                        <div class="row">
                                             <div class="col-md-6">
                                                 <label for="inputHomeWasteDisposal" class="form-label">Waste Disposal Method</label>
                                                 <select id="inputHomeWasteDisposal" class="form-select">
@@ -116,7 +116,7 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <h5 class="card-title">Trasnport Preferences</h5>
-                                            <div class="row" style="margin-top: 10px;">
+                                            <div class="row">
                                                 <div class="col-md-6">
                                                     <label for="inputTrasnport" class="form-label">Primay Mode of Trasnport</label>
                                                     <select id="inputTrasnport" class="form-select">

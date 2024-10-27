@@ -41,6 +41,10 @@ class Utils{
         return JSON.parse(localStorage.getItem('user')); 
     }
 
+    userId(){
+        return '67044bc0e71ec74679cbf51f'; // JSON.parse(localStorage.getItem('user').userId); 
+    }
+
     wait(time){        
         return new Promise((resolve) => {        
             setTimeout(function() { resolve() }, time)              

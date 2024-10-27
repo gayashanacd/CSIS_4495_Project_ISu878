@@ -36,10 +36,12 @@
                 <div class="col-md-3">
                     <label for="inputWasteCategery" class="form-label">Categery</label>
                     <select id="inputWasteCategery" class="form-select"  v-model="wasteInputs.categery">
-                        <option selected value="Recyclable">Recyclable</option>
-                        <option value="Non-Recyclable">Non-Recyclable</option>
-                        <option value="Compostable">Compostable</option>
-                        <option value="Hazardous">Hazardous </option>
+                        <option selected value="Plastic">Plastic</option>
+                        <option value="Paper">Paper</option>
+                        <option value="Metal">Metal</option>
+                        <option value="Organic">Organic</option>
+                        <option value="Glass">Glass</option>
+                        <option value="General">General</option>
                     </select> 
                 </div>
                 <div class="col-md-3">
@@ -68,7 +70,7 @@
                     <h5 style="color: brown;">Non-Recyclable - {{ this.totalNonRecyclable }} kg</h5>
                 </div>
                 <div class="col-md-4">
-                    <h5 style="color: brown;">Estimated Carbon Emissions - 1.2 kg CO2 - eq</h5>
+                    <h5 style="color: brown;">Estimated Carbon Emissions - {{ this.calculateWasteEmission() }} kg CO2 - eq</h5>
                 </div>
             </div>
         </div>
@@ -85,11 +87,14 @@
 
 <script>
 
-// import moment from 'moment';
 import ImpactEntryService from "@/services/ImpactEntryService";
+import CarbonEmissionCalculation from "@/mixins/CarbonEmissionCalculation.mxn";
+const Recyclable = ["Plastic", "Paper", "Metal", "Glass"];
+const NonRecyclable = ["General", "Organic"];
 
 export default {
     name: "WasteManagementEntry",
+    mixins:[CarbonEmissionCalculation],
     data() {           
         return {
             currentId : null,
@@ -97,7 +102,7 @@ export default {
             inputDate : this.$moment().format('YYYY-MM-DD'),
             wasteData : [],
             wasteInputs : {
-                categery : "Recyclable",
+                categery : "Plastic",
                 amount : 0,
                 id : 0
             }
@@ -110,7 +115,7 @@ export default {
         totalRecyclable(){
             let totRecyclable = 0;
             this.wasteData.forEach(element => {
-                if(element.categery === "Recyclable"){
+                if(Recyclable.includes(element.categery)){
                     totRecyclable += element.amount;  
                 }
             });
@@ -119,7 +124,7 @@ export default {
         totalNonRecyclable(){
             let totNonRecyclable = 0;
             this.wasteData.forEach(element => {
-                if(element.categery === "Non-Recyclable"){
+                if(NonRecyclable.includes(element.categery)){
                     totNonRecyclable += element.amount;  
                 }
             });
@@ -129,7 +134,7 @@ export default {
     methods: {
         fetchWasteData(){
             this.currentId = null;
-            ImpactEntryService.getUserWasteManagementEntryForDay('67044bc0e71ec74679cbf51f', this.inputDate)
+            ImpactEntryService.getUserWasteManagementEntryForDay(this.$util.userId(), this.inputDate)
                 .then(response => {       
                     console.log("Today waste data >> ", response.data);
                     if(response.data[0]){
@@ -143,7 +148,7 @@ export default {
         },
         resetWasteData(){
             this.wasteInputs = {
-                categery : "Recyclable",
+                categery : "Plastic",
                 amount : 0
             }
         },
@@ -171,13 +176,14 @@ export default {
         },
         submitData(){
             let inputPayload = {
-                userId: '67044bc0e71ec74679cbf51f',
+                userId: this.$util.userId(),
                 inputDate: this.inputDate, // this.$moment(this.inputDate).format('YYYY-MM-DD'),
-                wasteData: this.wasteData
+                wasteData: this.wasteData,
+                carbonEmissionsWaste : this.calculateWasteEmission()
             };
 
             if(this.currentId){
-                inputPayload._id = this.currentId
+                inputPayload._id = this.currentId;
                 ImpactEntryService.updateWasteManagementEntry(inputPayload)
                     .then(response => {       
                         console.log(response.data);

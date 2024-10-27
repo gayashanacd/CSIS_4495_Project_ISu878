@@ -17,11 +17,13 @@ app.use(express.json());
 // define Schema Class
 import users from './routes/users.js'
 import wasteManagement from './routes/wasteManagement.js'
+import waterUsage from './routes/waterUsage.js'
 // import carbonFootprint from './routes/carbonFootprint.js'
 
 // Mount the router middleware at a specific path
 app.use('/api', users);
 app.use('/api', wasteManagement);
+app.use('/api', waterUsage);
 // app.use('/api', carbonFootprint);
 
 // Connect to MongoDB

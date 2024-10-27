@@ -95,6 +95,19 @@
         
         </div>
     </div>   
+    <div class="card">
+        <div class="card-body ">
+            <h5 class="card-title">Summary of Water Usage | Total : 30 liters</h5>
+            <div class="row" style="text-align: center;">
+                <div class="col-md-6">
+                    <h5 style="color: brown;">Household - 20 liters</h5>
+                </div>
+                <div class="col-md-6">
+                    <h5 style="color: brown;">Outdoors - 10 liters</h5>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-1">
             <button class="btn btn-primary w-100" type="submit">Submit</button>

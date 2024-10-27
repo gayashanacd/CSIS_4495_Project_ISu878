@@ -28,7 +28,7 @@
                                     <WaterUsageEntry />    
                                 </div>
                                 <div class="tab-pane fade" id="waste-management" role="tabpanel" aria-labelledby="waste-management-tab">
-                                    
+                                    <WasteManagementEntry />      
                                 </div>
                             </div><!-- End Default Tabs -->
                         </div>
@@ -43,6 +43,7 @@
 
     import CarbonFootPrintEntry from '@/components/impact_entry/CarbonFootPrintEntry';
     import WaterUsageEntry from '@/components/impact_entry/WaterUsageEntry';
+    import WasteManagementEntry from '@/components/impact_entry/WasteManagementEntry';
 
     export default{
         name: "InstituteView",
@@ -53,7 +54,8 @@
         },
         components: {
             CarbonFootPrintEntry,
-            WaterUsageEntry
+            WaterUsageEntry,
+            WasteManagementEntry
         },
         methods: {
         },

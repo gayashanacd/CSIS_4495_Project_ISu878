@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-md-3">
                     <label for="inputTransportDate" class="form-label">Date</label>
-                    <input type="date" class="form-control" id="inputTransportDate">
+                    <input type="date" class="form-control" id="inputTransportDate" v-model="inputCarbonDate">
                 </div>
                 <div class="col-md-3">
                     <label for="inputTrasnportMode" class="form-label">Mode of Trasnport</label>
@@ -87,6 +87,7 @@ export default {
     name: "CarbonFootprintEntry",
     data() {           
         return {
+            inputCarbonDate : "2024-10-27"
         };
     },
     components: {

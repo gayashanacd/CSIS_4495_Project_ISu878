@@ -75,6 +75,12 @@ export default {
         login(event) {
             event.preventDefault();
             this.$util.setAuth(true);
+            this.$util.setUser({
+                userName : "John",
+                password : "John123",
+                email : "john.miller@gmail.com",
+                name : "John Miller"
+            });
             this.$router.push({ name: "DashboardView" }); 
             this.$util.wait(200).then(() => {                        
                 location.reload();                        

@@ -1,6 +1,7 @@
 import express from 'express';
 const router = express.Router();
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
 const userSchema = new mongoose.Schema({
     userName: { type: String, required: true },
@@ -34,7 +35,7 @@ router.route("/getUser/:id")
     });
 
 router.route("/newUser")
-    .post((req, res) => {
+    .post(async (req, res) => {
         const userName = req.body.userName;
         const password = req.body.password;
         const name = req.body.name;
@@ -46,10 +47,15 @@ router.route("/newUser")
         const transportPreferences = req.body.transportPreferences;
         const waterHabits = req.body.waterHabits
 
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        
+        // console.log("hashedPassword", hashedPassword);
+
         // create a new user object 
         const newUser = new User({
             userName,
-            password,
+            password, // this needs to be hashedPassword
             name,
             email,
             address,
@@ -60,8 +66,10 @@ router.route("/newUser")
             waterHabits
         });
 
+        // console.log("newUser", newUser);
+
         // save the new object (newUser)
-        newUser
+        await newUser
             .save()
             .then(() => res.json("User added!"))
             .catch((err) => res.status(400).json("Error: " + err));
@@ -94,6 +102,33 @@ router.route("/user/:id")
         User.findByIdAndDelete(req.params.id)
             .then(() => res.json("User deleted."))
             .catch((err) => res.status(400).json("Error: " + err));
+    });
+
+
+router.route("/login")
+    .post(async (req, res) => {
+        const { username, password } = req.body;
+        if (!username) {
+            res.status(400).send('username is required');
+        }
+        if (!password) {
+            res.status(400).send('password is required');
+        }
+
+        const user = await User.findOne({ username : username });
+        if (!user) {
+            res.status(400).send('Invalid username or password');
+        }
+
+        console.log("password >> ", password);
+        console.log("user >> ", user);
+
+        const match = await bcrypt.compare(password, user.password);
+        if (!match) {
+            res.status(400).send('Invalid username or password');
+        }
+
+        res.json({ message: "Login successful" });
     });
 
 export default router;

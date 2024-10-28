@@ -215,7 +215,10 @@ export default {
             waterConsumptionBarData : {
                 options: {
                     chart: {
-                        id: 'waterConsumptionBarChart'
+                        id: 'waterConsumptionBarChart',
+                        toolbar: {
+                            show: true
+                        }
                     },
                     xaxis: {
                         categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
@@ -316,19 +319,6 @@ export default {
                 });
         },
         renderCarbonFootprintPieChart(){
-            // document.addEventListener("DOMContentLoaded", () => {
-            //     new ApexCharts(document.querySelector("#pieChart"), {
-            //         series: [44, 55, 13, 43, 22],
-            //         chart: {
-            //             height: 350,
-            //             type: 'pie',
-            //             toolbar: {
-            //                 show: true
-            //             }
-            //         },
-            //         labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E']
-            //     }).render();
-            // });
             this.carbonFootprintPieData.series = [
                 this.carbonFootprintData.transport,
                 this.carbonFootprintData.energy,

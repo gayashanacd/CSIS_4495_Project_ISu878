@@ -120,9 +120,6 @@ router.route("/login")
             res.status(400).send('Invalid username or password');
         }
 
-        console.log("password >> ", password);
-        console.log("user >> ", user);
-
         const match = await bcrypt.compare(password, user.password);
         if (!match) {
             res.status(400).send('Invalid username or password');

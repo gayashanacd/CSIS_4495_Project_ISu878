@@ -68,7 +68,7 @@
                     <h5 style="color: brown;">Non-Recyclable - {{ this.totalNonRecyclable }} kg</h5>
                 </div>
                 <div class="col-md-4">
-                    <h5 style="color: brown;">Estimated Carbon Emissions - {{ this.calculateWasteEmission() }} kg CO2 - eq</h5>
+                    <h5 style="color: brown;">Estimated Carbon Emissions - {{ this.calculateWasteEmission() }} kg CO2</h5>
                 </div>
             </div>
         </div>

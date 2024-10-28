@@ -4,8 +4,11 @@ import mongoose from 'mongoose';
 
 const waterSchema = new mongoose.Schema({
     waterUsageData: { type: Object, required: true },
+    totalWaterUsage: { type: Number, required: false },
     inputDate: { type: String, required: true },
+    inputDayAbr: { type: String, required: true },
     userId : { type: String, required: true },
+    carbonEmissionsWater : { type: Number, required: false }
 });
 
 const WaterUsage = mongoose.model("WaterUsage", waterSchema);
@@ -38,6 +41,39 @@ router.route("/getUserWaterEntryForDay")
 
     });
 
+router.route("/getDailyWaterUsageChartData")
+    .get(async (req, res) => {
+        try {
+            const userId = req.query.userId; 
+            if (!userId) {
+                return res.status(400).json({ message: "UserId is required" });
+            }
+
+            const result = await WaterUsage.aggregate([
+                { $match: { userId: userId } },
+                {
+                    $group: {
+                        _id: "$inputDayAbr",             
+                        totalWaterUsage: { $sum: "$totalWaterUsage" }  
+                    }
+                },
+                {
+                    $sort: { _id: 1 } 
+                }
+            ]);
+
+            const formattedResult = result.reduce((acc, curr) => {
+                acc[curr._id] = curr.totalWaterUsage;
+                return acc;
+            }, {});
+
+            res.json(formattedResult);
+        } catch (error) {
+            console.error("Error fetching daily water usage data:", error);
+            res.status(500).json({ error: "An error occurred while fetching data." });
+        }
+    });
+
 // router.route("/getUser/:id")
 //     .get((req, res) => {
 //         User.findById(req.params.id)
@@ -49,13 +85,19 @@ router.route("/newWaterUsageEntry")
     .post((req, res) => {
         const userId = req.body.userId;
         const inputDate = req.body.inputDate;
+        const inputDayAbr = req.body.inputDayAbr;
         const waterUsageData = req.body.waterUsageData;
+        const totalWaterUsage = req.body.totalWaterUsage;
+        const carbonEmissionsWater = req.body.carbonEmissionsWater;
 
         // create a new WaterUsage object 
         const newWaterUsageEntry = new WaterUsage({
             userId,
             inputDate,
-            waterUsageData
+            inputDayAbr,
+            waterUsageData,
+            totalWaterUsage,
+            carbonEmissionsWater
         });
 
         // save the new object (newWaterUsageEntry)
@@ -71,7 +113,10 @@ router.route("/waterUsage/:id")
             .then((waterData) => {
                 waterData.userId = req.body.userId;
                 waterData.inputDate = req.body.inputDate;
+                waterData.inputDayAbr = req.body.inputDayAbr;
                 waterData.waterUsageData = req.body.waterUsageData;
+                waterData.totalWaterUsage = req.body.totalWaterUsage;
+                waterData.carbonEmissionsWater = req.body.carbonEmissionsWater;
 
                 waterData
                     .save()

@@ -21,8 +21,24 @@ class ImpactEntryService{
         return http.get(`/getUserWaterEntryForDay?userId=${userId}&inputDate=${inputDate}`);
     }
 
+    getUserDailyWaterUsage(userId){
+        return http.get(`/getDailyWaterUsageChartData?userId=${userId}`);
+    }
+
     updateWaterUsageEntry(data){
         return http.put(`/waterUsage/${data._id}`, data);
+    }
+
+    createEnergyUsageEntry(data){
+        return http.post("/newCarbonFootprintEntry", data);
+    }
+
+    getUserEnergyUsageEntryForDay(userId, inputDate){
+        return http.get(`/getUserEnergyEntryForDay?userId=${userId}&inputDate=${inputDate}`);
+    }
+
+    updateEnergyUsageEntry(data){
+        return http.put(`/carbonFootprint/${data._id}`, data);
     }
 }
 

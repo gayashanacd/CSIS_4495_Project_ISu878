@@ -151,6 +151,7 @@ export default {
                 categery : "Plastic",
                 amount : 0
             }
+            this.mode === "add";
         },
         addWasteData(){
             if(this.mode === "add"){

@@ -99,11 +99,14 @@
         <div class="card-body ">
             <h5 class="card-title">Summary of Water Usage | Total : 30 liters</h5>
             <div class="row" style="text-align: center;">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <h5 style="color: brown;">Household - {{ this.totalHouseholdUsage }} liters</h5>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <h5 style="color: brown;">Outdoors - {{ this.totalOutdoorUsage }} liters</h5>
+                </div>
+                <div class="col-md-4">
+                    <h5 style="color: brown;">Estimated Carbon Emissions - {{ this.calculateWaterEmission() }} kg CO2 </h5>
                 </div>
             </div>
         </div>
@@ -192,8 +195,10 @@ export default {
             let inputPayload = {
                 userId: this.$util.userId(),
                 inputDate: this.inputDate, 
+                inputDayAbr: this.$moment(this.inputDate).format('ddd'), 
+                totalWaterUsage :  parseFloat(this.totalHouseholdUsage) +  parseFloat(this.totalOutdoorUsage),
                 waterUsageData: this.waterUsageData,
-                carbonEmissionsWater : this.calculateWaterEmission()
+                carbonEmissionsWater : parseFloat(this.calculateWaterEmission())
             };
 
             console.log("waterUsageData >> ", this.waterUsageData);

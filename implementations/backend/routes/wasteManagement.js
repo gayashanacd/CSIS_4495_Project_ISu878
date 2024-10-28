@@ -6,6 +6,7 @@ const wasteSchema = new mongoose.Schema({
     wasteData: { type: [Object], required: true },
     inputDate: { type: String, required: true },
     userId : { type: String, required: true },
+    carbonEmissionsWaste : { type: Number, required: false }
 });
 
 const WasteManagement = mongoose.model("WasteManagement", wasteSchema);
@@ -50,12 +51,14 @@ router.route("/newWasteManagementEntry")
         const userId = req.body.userId;
         const inputDate = req.body.inputDate;
         const wasteData = req.body.wasteData;
+        const carbonEmissionsWaste = req.body.carbonEmissionsWaste;
 
         // create a new WasteManagement object 
         const newWasteManagementEntry = new WasteManagement({
             userId,
             inputDate,
-            wasteData
+            wasteData,
+            carbonEmissionsWaste
         });
 
         // save the new object (newWasteManagementEntry)
@@ -72,6 +75,7 @@ router.route("/wasteManagement/:id")
                 wasteData.userId = req.body.userId;
                 wasteData.inputDate = req.body.inputDate;
                 wasteData.wasteData = req.body.wasteData;
+                wasteData.carbonEmissionsWaste = req.body.carbonEmissionsWaste;
 
                 wasteData
                     .save()

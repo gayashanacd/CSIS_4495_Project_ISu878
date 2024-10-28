@@ -97,7 +97,7 @@
     </div>   
     <div class="card">
         <div class="card-body ">
-            <h5 class="card-title">Summary of Water Usage | Total : 30 liters</h5>
+            <h5 class="card-title">Summary of Water Usage | Total : {{ this.totalUsage }} liters</h5>
             <div class="row" style="text-align: center;">
                 <div class="col-md-4">
                     <h5 style="color: brown;">Household - {{ this.totalHouseholdUsage }} liters</h5>
@@ -112,11 +112,9 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-1">
-            <button class="btn btn-primary w-100" type="submit" @click="submitData">Submit</button>
-        </div>
-        <div class="col-1" style="margin-left: -15px;">
-            <button type="reset" class="btn btn-secondary"  @click="resetWaterData">Reset</button>
+        <div class="col-6">
+            <button class="btn btn-primary" type="submit" @click="submitData">Submit</button>
+            <button style="margin-left: 5px;" type="reset" class="btn btn-secondary"  @click="resetWaterData">Reset</button>
         </div>
     </div>
 </template>
@@ -159,6 +157,9 @@ export default {
         },
         totalOutdoorUsage(){
             return this.waterUsageData.gardeningUsage;
+        },
+        totalUsage(){
+            return parseFloat(this.totalHouseholdUsage) +  parseFloat(this.totalOutdoorUsage);    
         }
     },
     methods: {

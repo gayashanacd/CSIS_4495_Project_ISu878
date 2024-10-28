@@ -56,11 +56,9 @@
                 </div>
             </div>
             <div class="row" style="margin-top: 10px;">
-                <div class="col-1">
-                    <button class="btn btn-primary w-100" type="submit" @click="addTransportData">Add</button>
-                </div>
-                <div class="col-1" style="margin-left: -15px;">
-                    <button type="reset" class="btn btn-secondary" @click="resetTransportData">Reset</button>
+                <div class="col-6">
+                    <button class="btn btn-primary" type="submit" @click="addTransportData">Add</button>
+                    <button style="margin-left: 5px;" type="reset" class="btn btn-secondary" @click="resetTransportData">Reset</button>
                 </div>
             </div>
         </div>
@@ -105,7 +103,7 @@
     </div>
     <div class="card">
         <div class="card-body ">
-            <h5 class="card-title">Summary of Carbon Emissions | Total : 12.5 kgCO2</h5>
+            <h5 class="card-title">Summary of Carbon Emissions | Total : {{ this.totalCarbonEmissions }} kgCO2</h5>
             <div class="row" style="text-align: center;">
                 <div class="col-md-6">
                     <h5 style="color: brown;">Transportation - {{ this.calculateTransportEmission() }} kgCO2</h5>
@@ -117,8 +115,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-1">
-            <button class="btn btn-primary w-100" type="submit"  @click="submitData">Submit</button>
+        <div class="col-lg-6">
+            <button class="btn btn-primary" type="submit"  @click="submitData">Submit</button>
         </div>
     </div>
 </template>
@@ -152,6 +150,11 @@ export default {
     },
     components: {
       
+    },
+    computed: {
+        totalCarbonEmissions(){
+            return parseFloat(this.calculateTransportEmission()) + parseFloat(this.calculateHomeEnergyEmission());
+        }
     },
     methods: {
         fetchEnergyData (){

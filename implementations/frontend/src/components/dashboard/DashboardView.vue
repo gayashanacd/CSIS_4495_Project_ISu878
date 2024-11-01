@@ -1,6 +1,28 @@
 <template>
     <div class="pagetitle">
         <h1>Dashboard</h1>
+        <div class="row" style="float: right; margin-top: -35px;">
+            <div class="col-md-4">
+                <select id="inputDashboardDay" class="form-select"  v-model="searchFilters.timePeriod">
+                    <option selected value="Today">Today</option>
+                    <option value="Last Month">Last Month</option>
+                    <option value="Last Year">Last Year</option>
+                </select> 
+            </div>
+            <div class="col-md-1" style="margin: 5px -15px 5px 0px;">
+                 | 
+            </div>
+            <div class="col-md-1" style="margin-right: 5px;">
+                <button type="button" class="btn btn-info"><i class="bi bi-caret-left" @click="changeDay('backward');"></i></button>
+            </div>
+            <div class="col-md-5" style="margin: 0px;">
+                <input type="date" class="form-control" id="inputDashboardDate" v-model="searchFilters.date">
+            </div>
+            <div class="col-md-1" style="margin-left: -20px; margin-right: 15px;">
+                <button type="button" class="btn btn-info"><i class="bi bi-caret-right" @click="changeDay('forward');"></i></button>
+            </div>
+        </div>
+        <div class="clearfix"></div>
     </div>
 
     <section class="section dashboard">
@@ -188,6 +210,10 @@ export default {
     data() {           
         return {
             today : this.$moment().format('YYYY-MM-DD'),
+            searchFilters : {
+                timePeriod : "Today",
+                date : this.$moment().format('YYYY-MM-DD'),
+            },
             carbonFootprintData : {
                 total : 0,
                 transport : 0,
@@ -243,8 +269,27 @@ export default {
       
     },
     methods: {
+        changeDay(type){
+            if( type === 'forward'){
+                const today = this.$moment().startOf('day');
+                const newDate = this.$moment(this.searchFilters.date).add(1, 'days');
+                if (newDate.isAfter(today)) {
+                    this.$util.notify("Invalid day !", "warning"); 
+                }
+                else{
+                    this.searchFilters.date = newDate.format('YYYY-MM-DD');
+                    this.fetchEnergyData();
+                    this.fetchWasteData();
+                }
+            }
+            else {
+                this.searchFilters.date = this.$moment(this.searchFilters.date).subtract(1, 'days').format('YYYY-MM-DD');
+                this.fetchEnergyData();
+                this.fetchWasteData();
+            }
+        },
         fetchEnergyData (){
-            ImpactEntryService.getUserEnergyUsageEntryForDay(this.$util.userId(), this.today)
+            ImpactEntryService.getUserEnergyUsageEntryForDay(this.$util.userId(), this.searchFilters.date)
                 .then(response => {       
                     console.log("Today energy data >> ", response.data);
                     if(response.data[0]){
@@ -259,8 +304,7 @@ export default {
                 });
         },
         fetchWasteData(){
-            this.currentId = null;
-            ImpactEntryService.getUserWasteManagementEntryForDay(this.$util.userId(), this.today)
+            ImpactEntryService.getUserWasteManagementEntryForDay(this.$util.userId(), this.searchFilters.date)
                 .then(response => {       
                     console.log("Today waste data >> ", response.data);
                     if(response.data[0]){

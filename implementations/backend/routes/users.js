@@ -131,8 +131,7 @@ router.route("/login")
                 return res.status(400).send('Invalid username or password');
             }
 
-            res.json({ message: "Login successful" });
-
+            res.json(user)
         } catch (error) {
             // Log the error for debugging purposes
             console.error("Error during login:", error);

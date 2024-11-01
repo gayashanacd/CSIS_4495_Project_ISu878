@@ -22,7 +22,7 @@
                                     <label for="yourUsername" class="form-label">Username</label>
                                     <div class="input-group has-validation">
                                         <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                        <input type="text" name="username" class="form-control" id="yourUsername" v-model="userLoginRequest.username" required>
+                                        <input type="text" name="username" class="form-control" id="yourUsername" v-model="userLoginRequest.userName" required>
                                         <div class="invalid-feedback">Please enter your username.</div>
                                     </div>
                                 </div>
@@ -62,29 +62,38 @@
 
 <script>
 
-
+import LoginService from "@/services/LoginService";
 
 export default {
     name: "UserLogin",
     data() {           
         return {
-          userLoginRequest: { username: "", password: "" }
+          userLoginRequest: { userName: "", password: "" }
         };
     },
     methods: {
         login(event) {
             event.preventDefault();
-            this.$util.setAuth(true);
-            this.$util.setUser({
-                userName : "John",
-                password : "John123",
-                email : "john.miller@gmail.com",
-                name : "John Miller"
-            });
-            this.$router.push({ name: "DashboardView" }); 
-            this.$util.wait(200).then(() => {                        
-                location.reload();                        
-            })  
+            LoginService.login(this.userLoginRequest)
+                .then(response => {       
+                    let user = response.data;
+                    console.log(user);
+                    this.$util.setUser(user);
+                    this.$util.setAuth(true);
+                    this.$router.push({ name: "DashboardView" }); 
+                    this.$util.wait(200).then(() => {                        
+                        location.reload();                        
+                    })  
+                })
+                .catch(e => {
+                    this.userLoginRequest = {
+                        userName : "",
+                        password : ""
+                    },
+                    this.$util.notify(e.response.data);
+                    this.message = e.response.data;
+                    console.log(e.response.data);
+                });
         },
         routeToRegister(){
             this.$util.wait(200).then(() => {                        

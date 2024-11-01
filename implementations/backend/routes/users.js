@@ -34,8 +34,8 @@ router.route("/getUser/:id")
             .catch((err) => res.status(400).json("Error: " + err));
     });
 
-router.route("/newUser")
-    .post(async (req, res) => {
+router.route('/newUser').post(async (req, res) => {
+    try {
         const userName = req.body.userName;
         const password = req.body.password;
         const name = req.body.name;
@@ -49,13 +49,11 @@ router.route("/newUser")
 
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
-        
-        // console.log("hashedPassword", hashedPassword);
 
         // create a new user object 
         const newUser = new User({
             userName,
-            password, // this needs to be hashedPassword
+            password: hashedPassword, // this needs to be hashedPassword
             name,
             email,
             address,
@@ -66,14 +64,17 @@ router.route("/newUser")
             waterHabits
         });
 
-        // console.log("newUser", newUser);
+        // Save the user to the database asynchronously
+        await newUser.save();
 
-        // save the new object (newUser)
-        await newUser
-            .save()
-            .then(() => res.json("User added!"))
-            .catch((err) => res.status(400).json("Error: " + err));
-    });
+        // Send a success response
+        res.status(201).json({ message: "User added!" });
+    } catch (error) {
+        // Handle errors and send an error response
+        console.error("Error creating user:", error);
+        res.status(500).json({ message: "Error creating user", error: error.message });
+    }
+});
 
 router.route("/user/:id")
     .put((req, res) => {
@@ -107,25 +108,38 @@ router.route("/user/:id")
 
 router.route("/login")
     .post(async (req, res) => {
-        const { username, password } = req.body;
-        if (!username) {
-            res.status(400).send('username is required');
-        }
-        if (!password) {
-            res.status(400).send('password is required');
-        }
+        try {
+            const { userName, password } = req.body;
 
-        const user = await User.findOne({ username : username });
-        if (!user) {
-            res.status(400).send('Invalid username or password');
-        }
+            if (!userName) {
+                return res.status(400).send('Username is required');
+            }
+            if (!password) {
+                return res.status(400).send('Password is required');
+            }
 
-        const match = await bcrypt.compare(password, user.password);
-        if (!match) {
-            res.status(400).send('Invalid username or password');
-        }
+            // Find user by username
+            const user = await User.findOne({ userName });
 
-        res.json({ message: "Login successful" });
+            if (!user) {
+                return res.status(400).send('Invalid username or password');
+            }
+
+            // Compare entered password with stored hashed password
+            const match = await bcrypt.compare(password, user.password);
+            if (!match) {
+                return res.status(400).send('Invalid username or password');
+            }
+
+            res.json({ message: "Login successful" });
+
+        } catch (error) {
+            // Log the error for debugging purposes
+            console.error("Error during login:", error);
+
+            // Send a 500 response with error details
+            res.status(500).json({ message: "Error during login", error: error.message });
+        }
     });
 
 export default router;

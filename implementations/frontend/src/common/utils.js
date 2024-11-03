@@ -42,7 +42,7 @@ class Utils{
     }
 
     userId(){
-        return '67044bc0e71ec74679cbf51f'; // JSON.parse(localStorage.getItem('user').userId); 
+        return JSON.parse(localStorage.getItem('user'))._id; 
     }
 
     wait(time){        

@@ -43,7 +43,7 @@
                                 <div class="col-12">
                                 <p class="small mb-0">Don't have account? 
                                     <router-link to="/register" @click="routeToRegister">
-                                            Get Started
+                                        Get Started
                                     </router-link>
                                 </p>
                                 </div>
@@ -68,7 +68,7 @@ export default {
     name: "UserLogin",
     data() {           
         return {
-          userLoginRequest: { userName: "", password: "" }
+            userLoginRequest: { userName: "", password: "" }
         };
     },
     methods: {

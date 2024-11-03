@@ -9,12 +9,11 @@ const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: false },
     address: { type: String, required: false },
-    dob: { type: Date, required: false },
+    dob: { type: String, required: false },
     energyPreferences: {type: Object, required: false},
     transportPreferences: {type: Object, required: false},
     waterHabits: {type: Object, required: false},
     imgUrl: { type: String, required: false },
-    // count: { type: Number, required: false },
     createdAt: { type: Date, default: Date.now }
 });
 
@@ -34,7 +33,7 @@ router.route("/getUser/:id")
             .catch((err) => res.status(400).json("Error: " + err));
     });
 
-router.route('/newUser').post(async (req, res) => {
+router.route('/register').post(async (req, res) => {
     try {
         const userName = req.body.userName;
         const password = req.body.password;
@@ -53,7 +52,7 @@ router.route('/newUser').post(async (req, res) => {
         // create a new user object 
         const newUser = new User({
             userName,
-            password: hashedPassword, // this needs to be hashedPassword
+            password: hashedPassword,
             name,
             email,
             address,
@@ -67,8 +66,9 @@ router.route('/newUser').post(async (req, res) => {
         // Save the user to the database asynchronously
         await newUser.save();
 
-        // Send a success response
-        res.status(201).json({ message: "User added!" });
+        // Send the added user
+        // res.status(201).json({ message: "User added!" });
+        res.json(newUser);
     } catch (error) {
         // Handle errors and send an error response
         console.error("Error creating user:", error);

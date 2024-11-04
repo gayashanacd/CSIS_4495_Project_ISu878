@@ -6,7 +6,7 @@
         <section class="section">
             <div class="row">
                 <div class="col-lg-12">
-
+                    <UserProfile :view="'profile'"  />
                 </div>
             </div>
         </section>
@@ -15,6 +15,8 @@
 
 <script>
 
+    import UserProfile from '@/components/registration/UserProfile.vue';
+
     export default{
         name: "ProfileView",
         data(){
@@ -22,9 +24,11 @@
 
             };
         },
+        components: {
+            UserProfile,
+        },
         methods: {
         },
-
         mounted() {   
         }
     }

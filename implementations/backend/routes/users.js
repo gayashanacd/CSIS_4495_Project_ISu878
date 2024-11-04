@@ -9,7 +9,10 @@ const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: false },
     address: { type: String, required: false },
+    city: { type: String, required: false },
+    occupation: { type: String, required: false },
     dob: { type: String, required: false },
+    householdSize: { type: Number, required: false },
     energyPreferences: {type: Object, required: false},
     transportPreferences: {type: Object, required: false},
     waterHabits: {type: Object, required: false},
@@ -40,7 +43,10 @@ router.route('/register').post(async (req, res) => {
         const name = req.body.name;
         const email = req.body.email;
         const address = req.body.address;
+        const city = req.body.city;
+        const occupation = req.body.occupation;
         const dob = req.body.dob;
+        const householdSize = req.body.householdSize;
         const imgUrl = req.body.imgUrl;
         const energyPreferences = req.body.energyPreferences;
         const transportPreferences = req.body.transportPreferences;
@@ -56,7 +62,10 @@ router.route('/register').post(async (req, res) => {
             name,
             email,
             address,
+            city,
+            occupation,
             dob,
+            householdSize,
             imgUrl,
             energyPreferences,
             transportPreferences,
@@ -77,14 +86,22 @@ router.route('/register').post(async (req, res) => {
 });
 
 router.route("/user/:id")
-    .put((req, res) => {
+    .put(async (req, res) => {
         User.findById(req.params.id)
-            .then((user) => {
-                user.userName = req.body.userName;
-                user.password = req.body.password;
+            .then(async (user) => {
+
+                const saltRounds = 10;
+                const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+
+                // user.userName = req.body.userName;
+                // user.password = hashedPassword;
                 user.name = req.body.name;
                 user.email = req.body.email;
+                user.address = req.body.address;
+                user.city = req.body.city;
+                user.occupation = req.body.occupation;
                 user.dob = req.body.dob;
+                user.householdSize = req.body.householdSize;
                 user.imgUrl = req.body.imgUrl;
                 user.energyPreferences = req.body.energyPreferences;
                 user.transportPreferences = req.body.transportPreferences;
@@ -92,7 +109,7 @@ router.route("/user/:id")
 
                 user
                     .save()
-                    .then(() => res.json("User updated!"))
+                    .then(() => res.json(user))
                     .catch((err) => res.status(400).json("Error: " + err));
             })
             .catch((err) => res.status(400).json("Error: " + err));

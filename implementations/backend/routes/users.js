@@ -158,4 +158,13 @@ router.route("/login")
         }
     });
 
+export const getAllUserIds = async () => {
+    try {
+        const users = await User.find({}, { _id: 1 }); 
+        return users.map(user => user._id.toString()); 
+    } catch (error) {
+        throw new Error("Failed to retrieve user IDs: " + error.message);
+    }
+};
+
 export default router;

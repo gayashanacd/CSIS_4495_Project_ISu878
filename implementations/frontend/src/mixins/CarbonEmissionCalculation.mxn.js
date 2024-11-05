@@ -33,6 +33,7 @@ export default {
     mixins:[ ],
     data() {
         return {        
+            householdSize : 1
         }
     },
     computed: {
@@ -43,6 +44,9 @@ export default {
         // }
     },
 	created(){        
+        let user = this.$util.getUser();
+        if(user.householdSize)
+            this.householdSize = user.householdSize;
     },
 	methods:{
         calculateWasteEmission(){
@@ -55,12 +59,14 @@ export default {
                     console.error(`Unknown waste type: ${categery}`);
                 }
             });
-            return totalEmissions.toFixed(2);
+            return (totalEmissions / this.householdSize).toFixed(2);
         },
         calculateWaterEmission(){
             if(this.waterUsageData){
                 let totalWaterUsage = this.totalHouseholdUsage + this.totalOutdoorUsage + parseInt(this.waterUsageData.miscellaneousUsage);
+                console.log("totalWaterUsage >>", totalWaterUsage);
                 let totalWaterUsageInCubicM = totalWaterUsage / 1000;
+                // return ((WATER_EMISSION_FACTOR * totalWaterUsageInCubicM) / this.householdSize).toFixed(2);
                 return (WATER_EMISSION_FACTOR * totalWaterUsageInCubicM).toFixed(2);
             }
         },
@@ -80,7 +86,7 @@ export default {
             if(this.homeData){
                 let totalHomeUsage = this.homeData.electricityUsage * HOME_ENERGY_EMISSION_FACTORS[this.homeData.enerySource]
                 totalHomeUsage += this.homeData.gasUsage * GAS_EMISSION_FACTOR;
-                return totalHomeUsage.toFixed(2);
+                return (totalHomeUsage / this.householdSize).toFixed(2);
             }
         },
 	}

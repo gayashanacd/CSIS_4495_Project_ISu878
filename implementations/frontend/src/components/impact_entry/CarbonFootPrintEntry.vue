@@ -153,7 +153,7 @@ export default {
     },
     computed: {
         totalCarbonEmissions(){
-            return parseFloat(this.calculateTransportEmission()) + parseFloat(this.calculateHomeEnergyEmission());
+            return parseFloat(parseFloat(this.calculateTransportEmission()) + parseFloat(this.calculateHomeEnergyEmission())).toFixed(2);
         }
     },
     methods: {
@@ -220,7 +220,7 @@ export default {
                 ImpactEntryService.updateEnergyUsageEntry(inputPayload)
                     .then(response => {       
                         console.log(response.data);
-                        this.$util.notify("Successfully updated carbon footprint entry !", "success"); 
+                        this.$util.notify("Successfully updated energy data !", "success"); 
                     })
                     .catch(e => {
                         console.log(e.response.data);
@@ -230,7 +230,7 @@ export default {
                 ImpactEntryService.createEnergyUsageEntry(inputPayload)
                     .then(response => {       
                         console.log(response.data);
-                        this.$util.notify("Successfully added carbon footprint entry !", "success"); 
+                        this.$util.notify("Successfully added energy data !", "success"); 
                     })
                     .catch(e => {
                         console.log(e.response.data);

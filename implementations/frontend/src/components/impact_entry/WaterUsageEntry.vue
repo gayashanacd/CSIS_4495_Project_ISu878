@@ -156,7 +156,7 @@ export default {
                 ( parseInt(this.waterUsageData.laundryUsage) * parseInt(this.waterUsageData.laundryNumOfLoads) );
         },
         totalOutdoorUsage(){
-            return this.waterUsageData.gardeningUsage;
+            return parseFloat(this.waterUsageData.gardeningUsage);
         },
         totalUsage(){
             return parseFloat(this.totalHouseholdUsage) +  parseFloat(this.totalOutdoorUsage);    

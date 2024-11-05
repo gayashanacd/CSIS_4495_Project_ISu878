@@ -76,7 +76,7 @@
                                         <i class="bi bi-car-front"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6>{{ this.carbonFootprintData.transport }} <span style="font-size: medium;">kgCO2</span> </h6>
+                                        <h6>{{ this.carbonFootprintData.transport.toFixed(2) }} <span style="font-size: medium;">kgCO2</span> </h6>
                                         <span class="text-danger small pt-1 fw-bold">2%</span> <span class="text-muted small pt-2 ps-1">increase</span>
                                     </div>
                                 </div>
@@ -103,7 +103,7 @@
                                         <i class="bi bi-plug"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6>{{ this.carbonFootprintData.energy }} <span style="font-size: medium;">kgCO2</span> </h6>
+                                        <h6>{{ this.carbonFootprintData.energy.toFixed(2) }} <span style="font-size: medium;">kgCO2</span> </h6>
                                         <span class="text-success small pt-1 fw-bold">5%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
                                     </div>
                                 </div>
@@ -130,7 +130,7 @@
                                         <i class="bi bi-trash"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6>{{ this.carbonFootprintData.waste }} <span style="font-size: medium;">kgCO2</span> </h6> 
+                                        <h6>{{ this.carbonFootprintData.waste.toFixed(2) }} <span style="font-size: medium;">kgCO2</span> </h6> 
                                         <span class="text-danger small pt-1 fw-bold">8%</span> <span class="text-muted small pt-2 ps-1">increase</span>
                                     </div>
                                 </div>
@@ -183,11 +183,11 @@
                     <div class="card-body">
                         <h5 class="card-title">Recommendations</h5>
                         <div class="activity">
-                            <div class="activity-item d-flex" v-for="(item, index) in recommendations" :key="item.id">
+                            <div class="activity-item d-flex" v-for="(item, index) in recommendations" :key="item._id">
                                 <div class="activite-label">{{ index + 1 }}</div>
                                 <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
                                 <div class="activity-content">
-                                    {{ item.text }}
+                                    {{ item.title }}
                                 </div>
                             </div>
                         </div> 
@@ -202,6 +202,7 @@
 <script>
 
 import ImpactEntryService from "@/services/ImpactEntryService";
+import RecommendationService from "@/services/RecommendationService";
 const Recyclable = ["Plastic", "Paper", "Metal", "Glass"];
 const NonRecyclable = ["General", "Organic"];
 
@@ -288,6 +289,22 @@ export default {
                 this.fetchWasteData();
             }
         },
+        fetchRecommendations(){
+            this.recommendations = [];
+            RecommendationService.getUserRecommendations(this.$util.userId())
+                .then(response => {       
+                    console.log("Recommendations >> ", response.data);
+                    if(response.data.length > 0){
+                        this.recommendations = response.data;
+                        // this.carbonFootprintData.transport = response.data[0].transportEmissions;
+                        // this.carbonFootprintData.energy = response.data[0].carbonEmissionsEnergy;
+                        // this.calculateTotalEmission();
+                    }
+                })
+                .catch(e => {
+                    console.log(e.response.data);
+                });
+        },
         fetchEnergyData (){
             ImpactEntryService.getUserEnergyUsageEntryForDay(this.$util.userId(), this.searchFilters.date)
                 .then(response => {       
@@ -295,8 +312,12 @@ export default {
                     if(response.data[0]){
                         this.carbonFootprintData.transport = response.data[0].transportEmissions;
                         this.carbonFootprintData.energy = response.data[0].carbonEmissionsEnergy;
+                        this.calculateTotalEmission();
                     }
-                    this.calculateTotalEmission();
+                    else{
+                        this.carbonFootprintData.transport = 0;
+                        this.carbonFootprintData.energy = 0;   
+                    }
                     this.renderCarbonFootprintPieChart();
                 })
                 .catch(e => {
@@ -309,9 +330,14 @@ export default {
                     console.log("Today waste data >> ", response.data);
                     if(response.data[0]){
                         this.carbonFootprintData.waste = response.data[0].carbonEmissionsWaste;
+                        this.renderWastePieChart(response.data[0]);
+                    }
+                    else{
+                        this.carbonFootprintData.waste = 0;
+                        this.wastePieData.series = [];
                     }
                     this.renderCarbonFootprintPieChart();
-                    this.renderWastePieChart(response.data[0]);
+                    
                 })
                 .catch(e => {
                     console.log(e.response);
@@ -390,6 +416,7 @@ export default {
         this.fetchEnergyData();
         this.fetchWasteData();
         this.fetchDailyWaterUsageChartData();
+        this.fetchRecommendations();
     }
 };
 </script>

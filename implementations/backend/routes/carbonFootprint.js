@@ -23,7 +23,6 @@ router.route("/getEnergyData")
 
 router.route("/getUserEnergyEntryForDay")
     .get((req, res) => {
-
         const { userId, inputDate } = req.query;
         if (!userId) {
             res.status(400).send('userId query parameter is required');
@@ -39,7 +38,6 @@ router.route("/getUserEnergyEntryForDay")
         CarbonFootprint.find({ userId: userId, inputDate : inputDate })
             .then((items) => res.json(items))
             .catch((err) => res.status(400).json("Error: " + err));   
-
     });
 
 // router.route("/getUser/:id")
@@ -103,5 +101,34 @@ router.route("/carbonFootprint/:id")
 //             .then(() => res.json("User deleted."))
 //             .catch((err) => res.status(400).json("Error: " + err));
 //     });
+
+// Function to get the last week's total carbon footprint
+export const getLastWeekCarbonFootprint = async (userId) => {
+    try {
+        // Get today's date and the date one week ago
+        const today = new Date();
+        const lastWeek = new Date();
+        lastWeek.setDate(today.getDate() - 7);
+
+        // Find carbon footprint entries for the last week for the given userId
+        const footprints = await CarbonFootprint.find({
+            userId,
+            inputDate: {
+                $gte: lastWeek.toISOString().split('T')[0], // Convert to YYYY-MM-DD
+                $lte: today.toISOString().split('T')[0]
+            }
+        });
+
+        // Calculate total footprint
+        const totalFootprint = footprints.reduce((total, entry) => {
+            const dailyTotal = (entry.carbonEmissionsEnergy || 0) + (entry.transportEmissions || 0) + (entry.homeEnergyEmissions || 0);
+            return total + dailyTotal;
+        }, 0);
+
+        return totalFootprint; // Return the total footprint
+    } catch (error) {
+        throw new Error("Failed to retrieve carbon footprint data: " + error.message);
+    }
+};
 
 export default router;

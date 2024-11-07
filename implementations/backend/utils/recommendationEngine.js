@@ -22,7 +22,7 @@
 // For instance, during summer, users could get reminders to reduce energy consumption by setting their air conditioning more efficiently, or during water scarcity periods, 
 // users could receive additional tips on conserving water.
 
-import { createRecommendation } from '../routes/recommendations.js';
+import { createRecommendation, checkDuplicate, updateRecommendation } from '../routes/recommendations.js';
 import { getLastWeekCarbonFootprint } from '../routes/carbonFootprint.js';
 
 const BENCHMARKS = {
@@ -62,14 +62,24 @@ class RecommendationEngine {
             this.createRecommendation({
                 ...recoObj,
                 title: "Reduce Your Carbon Footprint",
-                message: "Your carbon footprint is above the Canadian average. Consider using public transport, reducing energy usage at home, or investing in energy-efficient appliances."
+                message: "Your carbon footprint is above the Canadian average during last week. Consider using public transport, reducing energy usage at home, or investing in energy-efficient appliances."
             });
         } else {
-            this.createRecommendation({
-                ...recoObj,
-                title: "Great Job on Carbon Savings!",
-                message: "You're maintaining a carbon footprint below the Canadian average. Keep up the sustainable habits!"
-            });
+            const recommendation = await checkDuplicate({...recoObj, title: "Great Job on Carbon Savings!"});
+            if(recommendation[0]){
+                if(recommendation[0].isArchived){
+                    recommendation[0].isArchived = false;
+                    console.log("recommendation update>");
+                    updateRecommendation(recommendation[0]);
+                }
+            }
+            else {
+                this.createRecommendation({
+                    ...recoObj,
+                    title: "Great Job on Carbon Savings!",
+                    message: "You're maintaining a carbon footprint below the Canadian average. Keep up the sustainable habits!"
+                });
+            }
         }
     }
 

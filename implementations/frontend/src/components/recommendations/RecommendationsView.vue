@@ -1,30 +1,66 @@
 <template>
-  <div class="pagetitle">
-      <h1>Recommendations</h1>
-  </div>
-  <div class="row" style="margin-top: 20px;">
-      <div class="col-lg-12">
-
-      </div>
-  </div>  
+    <div class="pagetitle">
+        <h1>Recommendations</h1>
+    </div>
+    <section class="section">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- Default Tabs -->
+                            <ul class="nav nav-tabs" id="recommendationsTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="benchmarks-tab" data-bs-toggle="tab" data-bs-target="#benchmarks" type="button" role="tab" aria-controls="benchmarks" aria-selected="true">Benchmarks Based</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="pattern-recognition-tab" data-bs-toggle="tab" data-bs-target="#pattern-recognition" type="button" role="tab" aria-controls="pattern-recognition" aria-selected="false">Pattern Recognition</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="comparative-feedback-tab" data-bs-toggle="tab" data-bs-target="#comparative-feedback" type="button" role="tab" aria-controls="comparative-feedback" aria-selected="false">Comparative Feedback</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="context-aware-tab" data-bs-toggle="tab" data-bs-target="#context-aware" type="button" role="tab" aria-controls="context-aware" aria-selected="false">Context Aware</button>
+                                </li>
+                            </ul>
+                            <div class="tab-content pt-2" id="recommendationsTabContent">
+                                <div class="tab-pane fade show active" id="benchmarks" role="tabpanel" aria-labelledby="benchmarks-tab">
+                                    <BenchmarksBased /> 
+                                </div>
+                                <div class="tab-pane fade" id="pattern-recognition" role="tabpanel" aria-labelledby="pattern-recognition-tab">
+                                    <!-- <WaterUsageEntry />     -->
+                                </div>
+                                <div class="tab-pane fade" id="comparative-feedback" role="tabpanel" aria-labelledby="comparative-feedback-tab">
+                                    <!-- <WasteManagementEntry />       -->
+                                </div>
+                                <div class="tab-pane fade" id="context-aware" role="tabpanel" aria-labelledby="context-aware-tab">
+                                    <!-- <WasteManagementEntry />       -->
+                                </div>
+                            </div><!-- End Default Tabs -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>  
 </template>
 
 <script>
 
-export default {
-  name: "RecommendationsView",
-  data() {           
-      return {
-      };
-  },
-  components: {
-    
-  },
-  methods: {
+import BenchmarksBased from '@/components/recommendations/BenchmarksBased.vue';
 
-  },
-  mounted() {   
-  }
+export default {
+    name: "RecommendationsView",
+    data() {           
+        return {
+        };
+    },
+    components: {
+        BenchmarksBased   
+    },
+    methods: {
+
+    },
+    mounted() {   
+    }
 };
 </script>
 

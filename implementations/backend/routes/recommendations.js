@@ -41,14 +41,35 @@ router.route("/getRecommendation/:id")
 
 router.route("/getUserRecommendations")
     .get((req, res) => {
-        const { userId } = req.query;
+        const { userId, type } = req.query;
+        let payload = {
+            userId: userId, 
+            isArchived : false   
+        };
         if (!userId) {
             res.status(400).send('userId query parameter is required');
         }
 
-        Recommendation.find({ userId: userId, isArchived : false })
+        if(type)
+            payload.type = type;   
+        
+        Recommendation.find(payload)
             .then((recommendations) => res.json(recommendations))
             .catch((err) => res.status(400).json("Error: " + err));   
+    });
+
+router.route("/recommendation/:id")
+    .put((req, res) => {
+        Recommendation.findById(req.params.id)
+            .then((recommendation) => {
+                recommendation.isArchived = req.body.isArchived;
+
+                recommendation
+                    .save()
+                    .then(() => res.json("Recommendation is archived!"))
+                    .catch((err) => res.status(400).json("Error: " + err));
+            })
+            .catch((err) => res.status(400).json("Error: " + err));
     });
 
 export const createRecommendation = async (recommendationData) => {
@@ -58,6 +79,25 @@ export const createRecommendation = async (recommendationData) => {
         return savedRecommendation;
     } catch (error) {
         throw new Error("Failed to create recommendation: " + error.message);
+    }
+};
+
+export const updateRecommendation = async (recommendationData) => {
+    try {
+        const savedRecommendation = await recommendationData.save();
+        return savedRecommendation;
+    } catch (error) {
+        throw new Error("Failed to update recommendation: " + error.message);
+    }
+};
+
+export const checkDuplicate = async (payload) => {
+    try {
+        const recommendation = await Recommendation.find(payload);
+        //const savedRecommendation = await recommendation.save();
+        return recommendation;
+    } catch (error) {
+        throw new Error("Failed to fetch recommendation: " + error.message);
     }
 };
 

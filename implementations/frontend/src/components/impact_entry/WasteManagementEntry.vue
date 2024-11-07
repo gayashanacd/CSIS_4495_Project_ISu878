@@ -178,6 +178,7 @@ export default {
                 userId: this.$util.userId(),
                 inputDate: this.inputDate, // this.$moment(this.inputDate).format('YYYY-MM-DD'),
                 wasteData: this.wasteData,
+                totalWaste: this.totalWaste,
                 carbonEmissionsWaste : this.calculateWasteEmission()
             };
 

@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 
 const wasteSchema = new mongoose.Schema({
     wasteData: { type: [Object], required: true },
+    totalWaste :  { type: Number, required: false },
     inputDate: { type: String, required: true },
     userId : { type: String, required: true },
     carbonEmissionsWaste : { type: Number, required: false }
@@ -51,6 +52,7 @@ router.route("/newWasteManagementEntry")
         const userId = req.body.userId;
         const inputDate = req.body.inputDate;
         const wasteData = req.body.wasteData;
+        const totalWaste = req.body.totalWaste;
         const carbonEmissionsWaste = req.body.carbonEmissionsWaste;
 
         // create a new WasteManagement object 
@@ -58,6 +60,7 @@ router.route("/newWasteManagementEntry")
             userId,
             inputDate,
             wasteData,
+            totalWaste,
             carbonEmissionsWaste
         });
 
@@ -75,6 +78,7 @@ router.route("/wasteManagement/:id")
                 wasteData.userId = req.body.userId;
                 wasteData.inputDate = req.body.inputDate;
                 wasteData.wasteData = req.body.wasteData;
+                wasteData.totalWaste = req.body.totalWaste;
                 wasteData.carbonEmissionsWaste = req.body.carbonEmissionsWaste;
 
                 wasteData
@@ -84,6 +88,32 @@ router.route("/wasteManagement/:id")
             })
             .catch((err) => res.status(400).json("Error: " + err));
     });
+
+// Function to get the last week's total waste generation
+export const getLastWeekWasteData = async (userId) => {
+    try {
+        const today = new Date();
+        const lastWeek = new Date();
+        lastWeek.setDate(today.getDate() - 7);
+
+        const wasteData = await WasteManagement.find({
+            userId,
+            inputDate: {
+                $gte: lastWeek.toISOString().split('T')[0], // Convert to YYYY-MM-DD
+                $lte: today.toISOString().split('T')[0]
+            }
+        });
+
+        const totalWasteData= wasteData.reduce((total, entry) => {
+            const dailyTotal = entry.totalWaste || 0;
+            return total + dailyTotal;
+        }, 0);
+
+        return totalWasteData; 
+    } catch (error) {
+        throw new Error("Failed to retrieve waste data: " + error.message);
+    }
+};
 
 // router.route("/user/:id")
 //     .delete((req, res) => {

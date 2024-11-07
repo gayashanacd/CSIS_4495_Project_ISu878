@@ -185,7 +185,7 @@
                         <div class="activity">
                             <div class="activity-item d-flex" v-for="(item, index) in recommendations" :key="item._id">
                                 <div class="activite-label">{{ index + 1 }}</div>
-                                <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
+                                <i :class="recommendationCatClass(item)"></i>
                                 <div class="activity-content">
                                     {{ item.title }}
                                 </div>
@@ -257,12 +257,12 @@ export default {
                 }]
             },
             recommendations : [
-                { id : 1, text : "Recycle your plastic botteles" },
-                { id : 1, text : "Compost organic waste" },
-                { id : 1, text : "Recycling contamination alert" },
-                { id : 1, text : "Cutdown on single use plastic" },
-                { id : 1, text : "Shorten your shower by 5 minutes to save 40 liters of water" },
-                { id : 1, text : "Switch to a water-efficient dishwasher cycle to reduce water use by 30%" }
+                // { id : 1, text : "Recycle your plastic botteles" },
+                // { id : 1, text : "Compost organic waste" },
+                // { id : 1, text : "Recycling contamination alert" },
+                // { id : 1, text : "Cutdown on single use plastic" },
+                // { id : 1, text : "Shorten your shower by 5 minutes to save 40 liters of water" },
+                // { id : 1, text : "Switch to a water-efficient dishwasher cycle to reduce water use by 30%" }
             ]
         };
     },
@@ -270,6 +270,12 @@ export default {
       
     },
     methods: {
+        recommendationCatClass(item){
+            if(item.category === "good")
+                return "bi bi-circle-fill activity-badge text-success align-self-start";
+            else 
+                return "bi bi-circle-fill activity-badge text-danger align-self-start";
+        },
         changeDay(type){
             if( type === 'forward'){
                 const today = this.$moment().startOf('day');
@@ -296,9 +302,6 @@ export default {
                     console.log("Recommendations >> ", response.data);
                     if(response.data.length > 0){
                         this.recommendations = response.data;
-                        // this.carbonFootprintData.transport = response.data[0].transportEmissions;
-                        // this.carbonFootprintData.energy = response.data[0].carbonEmissionsEnergy;
-                        // this.calculateTotalEmission();
                     }
                 })
                 .catch(e => {

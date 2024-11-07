@@ -3,12 +3,12 @@
         <section class="section">
             <div class="row">
                 <div class="col-md-12" style="margin-top: 10px; color: darkcyan;">
-                    <span style="font-size: small;">All these recommendations are based on from <b>last week</b> data and canadian benchmarks. 
+                    <span style="font-size: small;">Breakdown of typical daily water usage per person in Canada. These figures are estimates and can vary based on household habits, appliance efficiency, and regional climate.
                     </span>
                 </div>   
                 <div class="col-md-12" style="margin-top: 10px; color: darkcyan; margin-bottom: 15px;">
-                    <span style="font-size: small;">In Canada, the average daily footprint per person includes <b>39 kg of CO₂</b>emissions, <b>329 liters</b> of water usage, and <b>1.16 kg</b> of waste.
-                        Worldwide, the average daily footprint per person includes <b>10.9 kg of CO₂</b> emissions, <b>140 liters</b> of water usage, and <b>0.74 kg</b> of waste
+                    <span style="font-size: small;">Toilet flushing - 65 liters, Showering and bathing - 70 liters, Laundry - 55 liters, Dishwashing - 10 liters, Food preparation and drinking - 10 liters,
+                        Outdoor use (gardening, cleaning) - 50 liters, Cleaning (e.g., floors, surfaces) - 10 liters, Other uses - 59 liters.
                     </span>
                 </div> 
             </div>
@@ -34,7 +34,7 @@
     import RecommendationService from "@/services/RecommendationService";
 
     export default {
-        name: "BenchmarksBased",
+        name: "PatternsBased",
         data() {           
             return {
                 recommendations : []
@@ -43,9 +43,9 @@
         methods: {
             fetchRecommendations(){
                 this.recommendations = [];
-                RecommendationService.getUserRecommendations(this.$util.userId(), "benchmark")
+                RecommendationService.getUserRecommendations(this.$util.userId(), "pattern")
                     .then(response => {       
-                        console.log("Recommendations >> ", response.data);
+                        console.log("Pattern Recommendations >> ", response.data);
                         if(response.data.length > 0){
                             this.recommendations = response.data;
                         }

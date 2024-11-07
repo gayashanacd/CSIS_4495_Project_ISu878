@@ -1,6 +1,6 @@
 <template>
     <div class="pagetitle">
-        <h1>Recommendations</h1>
+        <h1>Recommendations Based On</h1>
     </div>
     <section class="section">
             <div class="row">
@@ -10,7 +10,7 @@
                             <!-- Default Tabs -->
                             <ul class="nav nav-tabs" id="recommendationsTab" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="benchmarks-tab" data-bs-toggle="tab" data-bs-target="#benchmarks" type="button" role="tab" aria-controls="benchmarks" aria-selected="true">Benchmarks Based</button>
+                                    <button class="nav-link active" id="benchmarks-tab" data-bs-toggle="tab" data-bs-target="#benchmarks" type="button" role="tab" aria-controls="benchmarks" aria-selected="true">Benchmarks</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link" id="pattern-recognition-tab" data-bs-toggle="tab" data-bs-target="#pattern-recognition" type="button" role="tab" aria-controls="pattern-recognition" aria-selected="false">Pattern Recognition</button>
@@ -27,7 +27,7 @@
                                     <BenchmarksBased /> 
                                 </div>
                                 <div class="tab-pane fade" id="pattern-recognition" role="tabpanel" aria-labelledby="pattern-recognition-tab">
-                                    <!-- <WaterUsageEntry />     -->
+                                    <PatternBased />    
                                 </div>
                                 <div class="tab-pane fade" id="comparative-feedback" role="tabpanel" aria-labelledby="comparative-feedback-tab">
                                     <!-- <WasteManagementEntry />       -->
@@ -46,6 +46,7 @@
 <script>
 
 import BenchmarksBased from '@/components/recommendations/BenchmarksBased.vue';
+import PatternBased from '@/components/recommendations/PatternBased.vue';
 
 export default {
     name: "RecommendationsView",
@@ -54,7 +55,8 @@ export default {
         };
     },
     components: {
-        BenchmarksBased   
+        BenchmarksBased,
+        PatternBased
     },
     methods: {
 

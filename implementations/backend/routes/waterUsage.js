@@ -48,32 +48,40 @@ router.route("/getDailyWaterUsageChartData")
             if (!userId) {
                 return res.status(400).json({ message: "UserId is required" });
             }
-
-            const result = await WaterUsage.aggregate([
-                { $match: { userId: userId } },
-                {
-                    $group: {
-                        _id: "$inputDayAbr",             
-                        totalWaterUsage: { $sum: "$totalWaterUsage" }  
-                    }
-                },
-                {
-                    $sort: { _id: 1 } 
-                }
-            ]);
-
-            const formattedResult = result.reduce((acc, curr) => {
-                acc[curr._id] = curr.totalWaterUsage;
-                return acc;
-            }, {});
-
-            res.json(formattedResult);
+            
+            res.json(await getDayWiseWaterUsage(userId));
         } catch (error) {
             console.error("Error fetching daily water usage data:", error);
             res.status(500).json({ error: "An error occurred while fetching data." });
         }
     });
 
+// Function to get day wise water usage
+export const getDayWiseWaterUsage = async (userId) => {
+    try {
+        const result = await WaterUsage.aggregate([
+            { $match: { userId: userId } },
+            {
+                $group: {
+                    _id: "$inputDayAbr",             
+                    totalWaterUsage: { $sum: "$totalWaterUsage" }  
+                }
+            },
+            {
+                $sort: { _id: 1 } 
+            }
+        ]);
+
+        const formattedResult = result.reduce((acc, curr) => {
+            acc[curr._id] = curr.totalWaterUsage;
+            return acc;
+        }, {});
+
+        return formattedResult; 
+    } catch (error) {
+        throw new Error("Error fetching daily water usage data: " + error.message);
+    }
+};
 // router.route("/getUser/:id")
 //     .get((req, res) => {
 //         User.findById(req.params.id)
@@ -125,6 +133,33 @@ router.route("/waterUsage/:id")
             })
             .catch((err) => res.status(400).json("Error: " + err));
     });
+
+// Function to get the last week's total water usage
+export const getLastWeekWaterUsage = async (userId) => {
+    try {
+        // Get today's date and the date one week ago
+        const today = new Date();
+        const lastWeek = new Date();
+        lastWeek.setDate(today.getDate() - 7);
+
+        const waterUsage = await WaterUsage.find({
+            userId,
+            inputDate: {
+                $gte: lastWeek.toISOString().split('T')[0], // Convert to YYYY-MM-DD
+                $lte: today.toISOString().split('T')[0]
+            }
+        });
+
+        const totalWaterUsage = waterUsage.reduce((total, entry) => {
+            const dailyTotal = entry.totalWaterUsage || 0;
+            return total + dailyTotal;
+        }, 0);
+
+        return totalWaterUsage; 
+    } catch (error) {
+        throw new Error("Failed to retrieve water usage data: " + error.message);
+    }
+};
 
 // router.route("/user/:id")
 //     .delete((req, res) => {

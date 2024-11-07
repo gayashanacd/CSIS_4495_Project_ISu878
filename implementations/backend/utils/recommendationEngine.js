@@ -24,17 +24,19 @@
 
 import { createRecommendation, checkDuplicate, updateRecommendation } from '../routes/recommendations.js';
 import { getLastWeekCarbonFootprint } from '../routes/carbonFootprint.js';
+import { getLastWeekWaterUsage, getDayWiseWaterUsage } from '../routes/waterUsage.js';
+import { getLastWeekWasteData } from '../routes/wasteManagement.js';
 
 const BENCHMARKS = {
     carbonFootprint: 77,  // Average kg CO₂ per person per year in worldwide is 4000
     waterUsage: 980,        // Average liters per day per person is 140
-    wasteManagement: 0.74     // kg of waste per month is 22.2 
+    wasteManagement: 5.18     // kg of waste per month is 22.2 
 };
 
 const CANADIAN_BENCHMARKS = {
     carbonFootprint: 272.3,      // Average kg CO₂ per person per year in Canada is 14200
-    waterUsage: 2303,            // Average liters per day per person in Canada is 140
-    wasteGeneration: 1.16       // Average kilograms of waste per month per person in Canada is 35
+    waterUsage: 2303,            // Average liters per day per person in Canada is 329
+    wasteGeneration: 8.16       // Average kilograms of waste per month per person in Canada is 35
 };
 
 class RecommendationEngine {
@@ -44,43 +46,109 @@ class RecommendationEngine {
     }
 
     init(){
-        // console.log("came to init >> ", this.userId);
         this.generateBenchmarkRecommendations();
+        this.generatePatternRecommendations();
     }
 
     async generateBenchmarkRecommendations(){
         // Carbon Footprint
         let lastWeekFootprint = await this.getLastWeekFootprint()
-        // console.log("lastWeekFootprint >> ", lastWeekFootprint);
+
         let recoObj = {
             type : "benchmark",
             userId : this.userId 
         };
 
-        // Calculate Carbon Footprint Recommendations
+        // Generate Carbon Footprint Recommendations
         if (lastWeekFootprint > CANADIAN_BENCHMARKS.carbonFootprint) {
             this.createRecommendation({
                 ...recoObj,
+                category : "bad",
                 title: "Reduce Your Carbon Footprint",
-                message: "Your carbon footprint is above the Canadian average during last week. Consider using public transport, reducing energy usage at home, or investing in energy-efficient appliances."
+                message: "Your carbon footprint is above the Canadian average. Consider using public transport, reducing energy usage at home, or investing in energy-efficient appliances."
             });
         } else {
-            const recommendation = await checkDuplicate({...recoObj, title: "Great Job on Carbon Savings!"});
-            if(recommendation[0]){
-                if(recommendation[0].isArchived){
-                    recommendation[0].isArchived = false;
-                    console.log("recommendation update>");
-                    updateRecommendation(recommendation[0]);
-                }
-            }
-            else {
-                this.createRecommendation({
-                    ...recoObj,
-                    title: "Great Job on Carbon Savings!",
-                    message: "You're maintaining a carbon footprint below the Canadian average. Keep up the sustainable habits!"
-                });
-            }
+            this.createRecommendation({
+                ...recoObj,
+                category : "good",
+                title: "Great Job on Carbon Savings!",
+                message: "You're maintaining a carbon footprint below the Canadian average. Keep up the sustainable habits!"
+            });
         }
+
+        // Water Usage
+        let getLastWeekWaterUsage = await this.getLastWeekWaterUsage()
+
+        // Generate Water Usage Recommendations
+        if (getLastWeekWaterUsage > CANADIAN_BENCHMARKS.waterUsage) {
+            this.createRecommendation({
+                ...recoObj,
+                category : "bad",
+                title: "Reduce Water Usage",
+                message: "Your water consumption exceeds the Canadian average. Try shorter showers, fix leaks, and use water-efficient fixtures to conserve water."
+            });
+        } else {
+            this.createRecommendation({
+                ...recoObj,
+                category : "good",
+                title: "Efficient Water Usage",
+                message: "Your water usage is below the Canadian average. Keep conserving water to support sustainable usage!"
+            });
+        }
+
+        // Waste Generation
+        let lastWeekWasteData = await this.getLastWeekWasteGenData()
+
+        // Generate Waste Generation Recommendations
+        if (lastWeekWasteData > CANADIAN_BENCHMARKS.wasteGeneration) {
+            this.createRecommendation({
+                ...recoObj,
+                category : "bad",
+                title: "Minimize Waste Generation",
+                message: "Your waste generation is above the average. Consider recycling more, composting, and reducing single-use plastics."
+            });
+        } else {
+            this.createRecommendation({
+                ...recoObj,
+                category : "good",
+                title: "Excellent Waste Management",
+                message: "You're generating less waste than the average. Keep practicing waste reduction techniques!"
+            });
+        }
+    }
+
+    async generatePatternRecommendations(){
+        let recoObj = {
+            type : "pattern",
+            userId : this.userId 
+        };
+
+        // Recommendations for weekend water spikes 
+        let dayWiseWaterUsageData = await this.getDayWiseWaterUsageData();
+        let _dayWiseWaterUsageData = {
+            Mon : dayWiseWaterUsageData.Mon ? dayWiseWaterUsageData.Mon : 0,
+            Tue : dayWiseWaterUsageData.Tue ? dayWiseWaterUsageData.Tue : 0,
+            Wed : dayWiseWaterUsageData.Wed ? dayWiseWaterUsageData.Wed : 0,
+            Thu : dayWiseWaterUsageData.Thu ? dayWiseWaterUsageData.Thu : 0,
+            Fri : dayWiseWaterUsageData.Fri ? dayWiseWaterUsageData.Fri : 0,
+            Sat : dayWiseWaterUsageData.Sat ? dayWiseWaterUsageData.Sat : 0,
+            Sun : dayWiseWaterUsageData.Sun ? dayWiseWaterUsageData.Sun : 0
+        };
+        let totalWeekendData = _dayWiseWaterUsageData.Sat + _dayWiseWaterUsageData.Sun;
+        let totalWeekData = _dayWiseWaterUsageData.Mon + _dayWiseWaterUsageData.Tue + _dayWiseWaterUsageData.Wed + _dayWiseWaterUsageData.Thu + _dayWiseWaterUsageData.Fri;
+
+        if((totalWeekendData / 2) > (totalWeekData / 5)){
+            this.createRecommendation({
+                ...recoObj,
+                category : "bad",
+                title: "Water Usage Spike on Weekends",
+                message: "We’ve noticed your water usage significantly increases on weekends. Consider setting reminders to take shorter showers or batch laundry loads to minimize peak usage. Small adjustments on busy days can save both water and money!"
+            });
+        }
+
+        // Recommendations for Waste Reduction
+
+        // Recommendations for Daily Electricity Use 
     }
 
     async getLastWeekFootprint() {
@@ -94,13 +162,58 @@ class RecommendationEngine {
         }
     }
 
+    async getDayWiseWaterUsageData() {
+        try {
+            const dayWaterUsage = await getDayWiseWaterUsage(this.userId);
+            return dayWaterUsage; 
+        } catch (error) {
+            console.error("Error getting day wise water usage:", error.message);
+            throw error; 
+        }
+    }
+
+    async getLastWeekWaterUsage() {
+        try {
+            const totalWaterUsage = await getLastWeekWaterUsage(this.userId);
+            return totalWaterUsage; 
+        } catch (error) {
+            console.error("Error getting last week's water usage:", error.message);
+            throw error; 
+        }
+    }
+
+    async getLastWeekWasteGenData() {
+        try {
+            const totalWasteData = await getLastWeekWasteData(this.userId);
+            return totalWasteData; 
+        } catch (error) {
+            console.error("Error getting last week's waste data:", error.message);
+            throw error; 
+        }
+    }
+
     // Method to create a recommendation
     async createRecommendation(data) {
         try {
-            const recommendation = await createRecommendation(data);
+            let recommendation = null;
+            const recommendationObj = await checkDuplicate({
+                userId : data.userId,
+                title : data.title,
+                type : data.type
+            });
+            if(recommendationObj[0]){
+                if(recommendationObj[0].isArchived){
+                    recommendationObj[0].isArchived = false;
+                    recommendation = updateRecommendation(recommendationObj[0]);
+                }
+            }
+            else {
+                recommendation = await createRecommendation(data);
+            }
+            
             return recommendation;
         } catch (error) {
-            console.error("Error creating recommendation:", error.message);
+            console.error("Error creating / updating recommendation:", error.message);
             throw error;
         }
     }

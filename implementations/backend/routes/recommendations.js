@@ -7,6 +7,7 @@ const recommendationSchema = new mongoose.Schema({
     title: { type: String, required: true },
     message: { type: String, required: false },
     type: { type: String, required: true },
+    category: { type: String, required: true },
     userId : { type: String, required: true },
     isArchived: { type: Boolean, required: true, default: false },
     createdAt: { type: Date, default: Date.now }

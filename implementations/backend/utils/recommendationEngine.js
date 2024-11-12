@@ -146,7 +146,38 @@ class RecommendationEngine {
             });
         }
 
-        // Recommendations for Waste Reduction
+        // Recommendations for Waste Reduction considering last 2 weeks
+        const totalWasteLastWeek = await getLastWeekWasteData(this.userId);
+        const today = new Date();
+        const lastWeek = new Date();
+        const weekBeforelastWeek = new Date();
+        lastWeek.setDate(today.getDate() - 7);
+        weekBeforelastWeek.setDate(today.getDate() - 14);
+        const totalWasteWeekBeforeLastWeek = await getLastWeekWasteData(this.userId, {
+            from : weekBeforelastWeek,
+            to : lastWeek
+        });
+        let pecentageOfWaste = 0;
+        // console.log("totalWasteLastWeek >> ", totalWasteLastWeek);
+        // console.log("totalWasteWeekBeforeLastWeek >> ", totalWasteWeekBeforeLastWeek);
+        if(totalWasteLastWeek > totalWasteWeekBeforeLastWeek){
+            pecentageOfWaste = (totalWasteLastWeek - totalWasteWeekBeforeLastWeek) / totalWasteLastWeek * 100;
+            this.createRecommendation({
+                ...recoObj,
+                category : "bad",
+                title: "Increase in Waste Output – Let’s Work Together to Reduce It!",
+                message: `Your waste output has increased by ${pecentageOfWaste}% over the last week. To help reverse this trend, try composting food scraps and choosing reusable items whenever possible. Together, we can work towards reducing waste and making a positive impact!`
+            });  
+        }
+        else {
+            pecentageOfWaste = (totalWasteWeekBeforeLastWeek - totalWasteLastWeek) / totalWasteWeekBeforeLastWeek * 100;
+            this.createRecommendation({
+                ...recoObj,
+                category : "good",
+                title: "Improvement in Waste Reduction – Keep It Up!",
+                message: `You’ve reduced your waste output by ${pecentageOfWaste}% over the last week! To continue this positive trend, consider composting food scraps or opting for reusable items. Let’s aim to keep reducing even more!`
+            });  
+        }
 
         // Recommendations for Daily Electricity Use 
     }

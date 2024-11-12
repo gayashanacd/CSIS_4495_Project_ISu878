@@ -89,12 +89,17 @@ router.route("/wasteManagement/:id")
             .catch((err) => res.status(400).json("Error: " + err));
     });
 
-// Function to get the last week's total waste generation
-export const getLastWeekWasteData = async (userId) => {
+// Function to get the last week's or given period total waste generation
+export const getLastWeekWasteData = async (userId, dates) => {
     try {
-        const today = new Date();
-        const lastWeek = new Date();
+        let today = new Date();
+        let lastWeek = new Date();
         lastWeek.setDate(today.getDate() - 7);
+
+        if(dates && dates.from && dates.to){
+            today = dates.to;
+            lastWeek = dates.from;
+        }
 
         const wasteData = await WasteManagement.find({
             userId,

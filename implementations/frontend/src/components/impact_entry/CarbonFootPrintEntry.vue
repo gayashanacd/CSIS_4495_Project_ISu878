@@ -212,7 +212,9 @@ export default {
                 homeData: this.homeData,
                 carbonEmissionsEnergy : parseFloat(this.calculateTransportEmission()) + parseFloat(this.calculateHomeEnergyEmission()),
                 transportEmissions : parseFloat(this.calculateTransportEmission()),
-                homeEnergyEmissions : parseFloat(this.calculateHomeEnergyEmission())
+                homeEnergyEmissions : parseFloat(this.calculateHomeEnergyEmission()),
+                householdSize : this.$util.getUser().householdSize || 1,
+                city : this.$util.getUser().city, 
             };
 
             if(this.currentId){

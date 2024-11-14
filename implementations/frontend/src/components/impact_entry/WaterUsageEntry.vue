@@ -199,7 +199,9 @@ export default {
                 inputDayAbr: this.$moment(this.inputDate).format('ddd'), 
                 totalWaterUsage :  parseFloat(this.totalHouseholdUsage) +  parseFloat(this.totalOutdoorUsage),
                 waterUsageData: this.waterUsageData,
-                carbonEmissionsWater : parseFloat(this.calculateWaterEmission())
+                carbonEmissionsWater : parseFloat(this.calculateWaterEmission()),
+                householdSize : this.$util.getUser().householdSize || 1,
+                city : this.$util.getUser().city
             };
 
             console.log("waterUsageData >> ", this.waterUsageData);

@@ -8,7 +8,8 @@ const waterSchema = new mongoose.Schema({
     inputDate: { type: String, required: true },
     inputDayAbr: { type: String, required: true },
     userId : { type: String, required: true },
-    carbonEmissionsWater : { type: Number, required: false }
+    carbonEmissionsWater : { type: Number, required: false },
+    createdAt: { type: Date, default: Date.now }
 });
 
 const WaterUsage = mongoose.model("WaterUsage", waterSchema);

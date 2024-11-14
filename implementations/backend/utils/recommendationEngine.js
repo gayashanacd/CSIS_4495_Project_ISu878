@@ -4,6 +4,7 @@
 // https://www.worldbank.org/en/topic/urbandevelopment/brief/solid-waste-management
 // https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Waste_statistics
 // https://www.statista.com/statistics/689809/per-capital-msw-generation-by-country-worldwide/
+// https://ca.renogy.com/blog/how-many-kwh-does-the-average-home-use/
 
 // 1. recommendations based on benchmarks
 // these values defer with country.
@@ -23,20 +24,22 @@
 // users could receive additional tips on conserving water.
 
 import { createRecommendation, checkDuplicate, updateRecommendation } from '../routes/recommendations.js';
-import { getLastWeekCarbonFootprint } from '../routes/carbonFootprint.js';
+import { getLastWeekCarbonFootprint, calculateDailyAverageElectricityUsage } from '../routes/carbonFootprint.js';
 import { getLastWeekWaterUsage, getDayWiseWaterUsage } from '../routes/waterUsage.js';
 import { getLastWeekWasteData } from '../routes/wasteManagement.js';
 
 const BENCHMARKS = {
     carbonFootprint: 77,  // Average kg CO₂ per person per year in worldwide is 4000
     waterUsage: 980,        // Average liters per day per person is 140
-    wasteManagement: 5.18     // kg of waste per month is 22.2 
+    wasteManagement: 5.18,     // kg of waste per month is 22.2 
+    electricUsage : 15      // Average daily usage worldwide
 };
 
 const CANADIAN_BENCHMARKS = {
     carbonFootprint: 272.3,      // Average kg CO₂ per person per year in Canada is 14200
     waterUsage: 2303,            // Average liters per day per person in Canada is 329
-    wasteGeneration: 8.16       // Average kilograms of waste per month per person in Canada is 35
+    wasteGeneration: 8.16,       // Average kilograms of waste per month per person in Canada is 35
+    electricUsage : 25          // Average daily usage during other seasons except winter
 };
 
 class RecommendationEngine {
@@ -158,14 +161,13 @@ class RecommendationEngine {
             to : lastWeek
         });
         let pecentageOfWaste = 0;
-        // console.log("totalWasteLastWeek >> ", totalWasteLastWeek);
-        // console.log("totalWasteWeekBeforeLastWeek >> ", totalWasteWeekBeforeLastWeek);
+
         if(totalWasteLastWeek > totalWasteWeekBeforeLastWeek){
             pecentageOfWaste = (totalWasteLastWeek - totalWasteWeekBeforeLastWeek) / totalWasteLastWeek * 100;
             this.createRecommendation({
                 ...recoObj,
                 category : "bad",
-                title: "Increase in Waste Output – Let’s Work Together to Reduce It!",
+                title: "Increase in Waste Output !",
                 message: `Your waste output has increased by ${pecentageOfWaste}% over the last week. To help reverse this trend, try composting food scraps and choosing reusable items whenever possible. Together, we can work towards reducing waste and making a positive impact!`
             });  
         }
@@ -174,12 +176,29 @@ class RecommendationEngine {
             this.createRecommendation({
                 ...recoObj,
                 category : "good",
-                title: "Improvement in Waste Reduction – Keep It Up!",
+                title: "Improvement in Waste Reduction!",
                 message: `You’ve reduced your waste output by ${pecentageOfWaste}% over the last week! To continue this positive trend, consider composting food scraps or opting for reusable items. Let’s aim to keep reducing even more!`
             });  
         }
 
         // Recommendations for Daily Electricity Use 
+        const dailyElectricityUsage = await calculateDailyAverageElectricityUsage(this.userId);
+        // console.log("dailyElectricityUsage >> ", dailyElectricityUsage);
+        if (dailyElectricityUsage > CANADIAN_BENCHMARKS.electricUsage) {
+            this.createRecommendation({
+                ...recoObj,
+                category : "bad",
+                title: "Daily Electricity Use is Above Benchmark",
+                message: "Your electricity usage is consistently higher than average. Try implementing energy-saving habits like unplugging unused devices or setting appliances on eco mode. Reducing daily electricity use can significantly lower your carbon footprint."
+            });
+        } else {
+            this.createRecommendation({
+                ...recoObj,
+                category : "good",
+                title: "Daily Electricity Use is Below Benchmark",
+                message: "Your electricity usage is consistently lower than average—great job! Maintaining energy-efficient habits like turning off lights when not needed and using eco-friendly appliance settings helps keep your consumption low. Your efforts make a positive impact on reducing your carbon footprint!"
+            });
+        }
     }
 
     async getLastWeekFootprint() {

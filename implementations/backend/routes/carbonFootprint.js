@@ -9,7 +9,10 @@ const carbonFootprintSchema = new mongoose.Schema({
     userId : { type: String, required: true },
     carbonEmissionsEnergy : { type: Number, required: false },
     transportEmissions : { type: Number, required: false },
-    homeEnergyEmissions : { type: Number, required: false }
+    homeEnergyEmissions : { type: Number, required: false },
+    householdSize: { type: Number, required: false },
+    city: { type: String, required: false },
+    createdAt: { type: Date, default: Date.now }
 });
 
 const CarbonFootprint = mongoose.model("CarbonFootprint", carbonFootprintSchema);
@@ -56,6 +59,8 @@ router.route("/newCarbonFootprintEntry")
         const carbonEmissionsEnergy = req.body.carbonEmissionsEnergy;
         const transportEmissions = req.body.transportEmissions;
         const homeEnergyEmissions = req.body.homeEnergyEmissions;
+        const householdSize = req.body.householdSize;
+        const city = req.body.city;
         
         // create a new CarbonFootprint object 
         const newCarbonFootprintEntry = new CarbonFootprint({
@@ -65,7 +70,9 @@ router.route("/newCarbonFootprintEntry")
             homeData,
             carbonEmissionsEnergy,
             transportEmissions,
-            homeEnergyEmissions
+            homeEnergyEmissions,
+            householdSize,
+            city
         });
 
         // save the new object (newCarbonFootprintEntry)
@@ -86,6 +93,8 @@ router.route("/carbonFootprint/:id")
                 energyData.carbonEmissionsEnergy = req.body.carbonEmissionsEnergy;
                 energyData.transportEmissions = req.body.transportEmissions;
                 energyData.homeEnergyEmissions = req.body.homeEnergyEmissions;
+                energyData.householdSize = req.body.householdSize;
+                energyData.city = req.body.city;
 
                 energyData
                     .save()
@@ -128,6 +137,27 @@ export const getLastWeekCarbonFootprint = async (userId) => {
         return totalFootprint; // Return the total footprint
     } catch (error) {
         throw new Error("Failed to retrieve carbon footprint data: " + error.message);
+    }
+};
+
+
+// Function to calculate daily average electricity usage for a given userId
+export const calculateDailyAverageElectricityUsage = async (userId) => {
+    try {
+        const footprints = await CarbonFootprint.find({ userId });
+
+        const electricityEntries = footprints
+            .filter(entry => entry.homeData?.enerySource === "Electricity" && entry.homeData.electricityUsage !== undefined);
+
+        const totalElectricityUsage = electricityEntries.reduce((total, entry) => {
+            return total + (entry.homeData.electricityUsage || 0);
+        }, 0);
+
+        const averageElectricityUsage = electricityEntries.length ? (totalElectricityUsage / electricityEntries.length) : 0;
+
+        return averageElectricityUsage;
+    } catch (error) {
+        throw new Error("Failed to calculate daily average electricity usage: " + error.message);
     }
 };
 

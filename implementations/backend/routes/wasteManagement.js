@@ -7,7 +7,8 @@ const wasteSchema = new mongoose.Schema({
     totalWaste :  { type: Number, required: false },
     inputDate: { type: String, required: true },
     userId : { type: String, required: true },
-    carbonEmissionsWaste : { type: Number, required: false }
+    carbonEmissionsWaste : { type: Number, required: false },
+    createdAt: { type: Date, default: Date.now }
 });
 
 const WasteManagement = mongoose.model("WasteManagement", wasteSchema);

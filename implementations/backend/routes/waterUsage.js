@@ -9,6 +9,8 @@ const waterSchema = new mongoose.Schema({
     inputDayAbr: { type: String, required: true },
     userId : { type: String, required: true },
     carbonEmissionsWater : { type: Number, required: false },
+    householdSize: { type: Number, required: false },
+    city: { type: String, required: false },
     createdAt: { type: Date, default: Date.now }
 });
 
@@ -98,6 +100,8 @@ router.route("/newWaterUsageEntry")
         const waterUsageData = req.body.waterUsageData;
         const totalWaterUsage = req.body.totalWaterUsage;
         const carbonEmissionsWater = req.body.carbonEmissionsWater;
+        const householdSize = req.body.householdSize;
+        const city = req.body.city;
 
         // create a new WaterUsage object 
         const newWaterUsageEntry = new WaterUsage({
@@ -106,7 +110,9 @@ router.route("/newWaterUsageEntry")
             inputDayAbr,
             waterUsageData,
             totalWaterUsage,
-            carbonEmissionsWater
+            carbonEmissionsWater,
+            householdSize,
+            city
         });
 
         // save the new object (newWaterUsageEntry)
@@ -126,6 +132,8 @@ router.route("/waterUsage/:id")
                 waterData.waterUsageData = req.body.waterUsageData;
                 waterData.totalWaterUsage = req.body.totalWaterUsage;
                 waterData.carbonEmissionsWater = req.body.carbonEmissionsWater;
+                waterData.householdSize = req.body.householdSize;
+                waterData.city = req.body.city;
 
                 waterData
                     .save()
@@ -159,6 +167,30 @@ export const getLastWeekWaterUsage = async (userId) => {
         return totalWaterUsage; 
     } catch (error) {
         throw new Error("Failed to retrieve water usage data: " + error.message);
+    }
+};
+
+export const calculateDailyAverageWaterUsage = async (user, userId) => {
+    try {
+        // get household water usage
+        const householdWaterUsage = await WaterUsage.find({householdSize: user.householdSize});
+        const totalHouseholdWaterUsage = householdWaterUsage.reduce((total, entry) => {
+            const dailyTotal = (entry.totalWaterUsage || 0);
+            return total + dailyTotal;
+        }, 0);
+        const averageHouseholdWaterUsage = householdWaterUsage.length ? (totalHouseholdWaterUsage / householdWaterUsage.length) : 0;
+
+        const userWaterUsage = householdWaterUsage
+            .filter(entry => entry.userId === userId && entry.userId !== undefined);
+        const totalUserWaterUsage= userWaterUsage.reduce((total, entry) => {
+            const dailyTotal = (entry.totalWaterUsage || 0);
+            return total + dailyTotal;
+        }, 0);
+        const averageUserWaterUsage = userWaterUsage.length ? (totalUserWaterUsage / userWaterUsage.length) : 0;
+        
+        return { averageHouseholdWaterUsage : averageHouseholdWaterUsage, averageUserWaterUsage : averageUserWaterUsage};
+    } catch (error) {
+        throw new Error("Failed to calculate daily average water usage: " + error.message);
     }
 };
 

@@ -3,12 +3,11 @@
         <section class="section">
             <div class="row">
                 <div class="col-md-12" style="margin-top: 10px; color: darkcyan;">
-                    <span style="font-size: small;">All these recommendations are based on from <b>last week</b> data and canadian benchmarks. 
+                    <span style="font-size: small;">Globally, a three-person household typically uses around <b>10-20 kWh</b> per day. 
                     </span>
                 </div>   
                 <div class="col-md-12" style="margin-top: 10px; color: darkcyan; margin-bottom: 15px;">
-                    <span style="font-size: small;">In Canada, the average daily footprint per person includes <b>39 kg of CO₂</b>emissions, <b>329 liters</b> of water usage, and <b>1.16 kg</b> of waste.
-                        Worldwide, the average daily footprint per person includes <b>10.9 kg of CO₂</b> emissions, <b>140 liters</b> of water usage, and <b>0.74 kg</b> of waste
+                    <span style="font-size: small;">In developed countries (such as the U.S., Canada, Japan, and much of Europe), a three-person household might use between <b>20-30 kWh</b> per day on average.
                     </span>
                 </div> 
             </div>
@@ -34,7 +33,7 @@
     import RecommendationService from "@/services/RecommendationService";
 
     export default {
-        name: "BenchmarksBased",
+        name: "ComparativeBased",
         data() {           
             return {
                 recommendations : []
@@ -43,9 +42,9 @@
         methods: {
             fetchRecommendations(){
                 this.recommendations = [];
-                RecommendationService.getUserRecommendations(this.$util.userId(), "benchmark")
+                RecommendationService.getUserRecommendations(this.$util.userId(), "comparative")
                     .then(response => {       
-                        console.log("Recommendations >> ", response.data);
+                        console.log("Recommendations comparative >> ", response.data);
                         if(response.data.length > 0){
                             this.recommendations = response.data;
                         }

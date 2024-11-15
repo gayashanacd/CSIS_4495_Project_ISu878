@@ -50,6 +50,13 @@ class Utils{
             setTimeout(function() { resolve() }, time)              
         })                
     }
+
+    recommendationCardClass(item){
+        if(item.category === "good")
+            return "card card-green";
+        else 
+            return "card card-red";
+    }
 }
 
 export const utils = new Utils()

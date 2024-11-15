@@ -24,9 +24,10 @@
 // users could receive additional tips on conserving water.
 
 import { createRecommendation, checkDuplicate, updateRecommendation } from '../routes/recommendations.js';
-import { getLastWeekCarbonFootprint, calculateDailyAverageElectricityUsage } from '../routes/carbonFootprint.js';
-import { getLastWeekWaterUsage, getDayWiseWaterUsage } from '../routes/waterUsage.js';
+import { getLastWeekCarbonFootprint, calculateDailyAverageElectricityUsage, calculateDailyAverageCarbonFootprint } from '../routes/carbonFootprint.js';
+import { getLastWeekWaterUsage, getDayWiseWaterUsage, calculateDailyAverageWaterUsage } from '../routes/waterUsage.js';
 import { getLastWeekWasteData } from '../routes/wasteManagement.js';
+import { getUser } from '../routes/users.js';
 
 const BENCHMARKS = {
     carbonFootprint: 77,  // Average kg CO₂ per person per year in worldwide is 4000
@@ -46,11 +47,14 @@ class RecommendationEngine {
 
     constructor(userId) {
         this.userId = userId;
+        this.user = null;
     }
 
-    init(){
+    async init(){
+        this.user = await getUser(this.userId);
         this.generateBenchmarkRecommendations();
         this.generatePatternRecommendations();
+        this.generateComperativeRecommendations();
     }
 
     async generateBenchmarkRecommendations(){
@@ -168,11 +172,11 @@ class RecommendationEngine {
                 ...recoObj,
                 category : "bad",
                 title: "Increase in Waste Output !",
-                message: `Your waste output has increased by ${pecentageOfWaste}% over the last week. To help reverse this trend, try composting food scraps and choosing reusable items whenever possible. Together, we can work towards reducing waste and making a positive impact!`
+                message: `Your waste output has increased by ${pecentageOfWaste.toFixed(2)}% over the last week. To help reverse this trend, try composting food scraps and choosing reusable items whenever possible. Together, we can work towards reducing waste and making a positive impact!`
             });  
         }
         else {
-            pecentageOfWaste = (totalWasteWeekBeforeLastWeek - totalWasteLastWeek) / totalWasteWeekBeforeLastWeek * 100;
+            pecentageOfWaste = (totalWasteWeekBeforeLastWeek - totalWasteLastWeek.toFixed(2)) / totalWasteWeekBeforeLastWeek * 100;
             this.createRecommendation({
                 ...recoObj,
                 category : "good",
@@ -197,6 +201,55 @@ class RecommendationEngine {
                 category : "good",
                 title: "Daily Electricity Use is Below Benchmark",
                 message: "Your electricity usage is consistently lower than average—great job! Maintaining energy-efficient habits like turning off lights when not needed and using eco-friendly appliance settings helps keep your consumption low. Your efforts make a positive impact on reducing your carbon footprint!"
+            });
+        }
+    }
+
+    async generateComperativeRecommendations(){
+        let recoObj = {
+            type : "comparative",
+            userId : this.userId 
+        };
+
+        // Recommendations city wise average carbon footprint campared to user
+        const averageCarbonFootprintData = await calculateDailyAverageCarbonFootprint(this.user, this.userId);
+        let pecentageOfCarbonFootprint = 0;
+        if (averageCarbonFootprintData.averageUserFootprint > averageCarbonFootprintData.averageCityFootprint) {
+            pecentageOfCarbonFootprint = (averageCarbonFootprintData.averageUserFootprint - averageCarbonFootprintData.averageCityFootprint) / averageCarbonFootprintData.averageUserFootprint * 100;
+            this.createRecommendation({
+                ...recoObj,
+                category : "bad",
+                title: "Above Average Carbon Footprint for Your City",
+                message: `Your carbon footprint is ${pecentageOfCarbonFootprint.toFixed(2)}% higher than the average in your area. Consider reducing car travel or switching to energy-efficient appliances to bring your emissions more in line with others nearby.`
+            });
+        } else {
+            pecentageOfCarbonFootprint = (averageCarbonFootprintData.averageCityFootprint - averageCarbonFootprintData.averageUserFootprint) / averageCarbonFootprintData.averageCityFootprint * 100;
+            this.createRecommendation({
+                ...recoObj,
+                category : "good",
+                title: "Below Average Carbon Footprint for Your City",
+                message: `Your carbon footprint is ${pecentageOfCarbonFootprint.toFixed(2)}% lower than the average in your area. Great work! Continuing to use energy-efficient appliances and minimizing car travel keeps your emissions lower than most nearby. Keep up the eco-friendly habits!`
+            });
+        }
+
+        // Recommendations household wise average water usage campared to user
+        const averageWaterUsageData = await calculateDailyAverageWaterUsage(this.user, this.userId);
+        let pecentageOfWaterUsage = 0;
+        if (averageWaterUsageData.averageUserWaterUsage > averageWaterUsageData.averageHouseholdWaterUsage) {
+            pecentageOfWaterUsage = (averageWaterUsageData.averageUserWaterUsage - averageWaterUsageData.averageHouseholdWaterUsage) / averageWaterUsageData.averageUserWaterUsage * 100;
+            this.createRecommendation({
+                ...recoObj,
+                category : "bad",
+                title: "Higher Water Usage Than Peers in Similar Households",
+                message: `Your water usage is ${pecentageOfWaterUsage.toFixed(2)}% higher than the average household of similar size. Consider adopting water-saving habits like fixing leaks, using low-flow fixtures, or limiting lawn watering. Small changes can make a big difference for the environment and your utility bill.`
+            });
+        } else {
+            pecentageOfWaterUsage = (averageWaterUsageData.averageHouseholdWaterUsage - averageWaterUsageData.averageUserWaterUsage) / averageWaterUsageData.averageHouseholdWaterUsage * 100;
+            this.createRecommendation({
+                ...recoObj,
+                category : "good",
+                title: "Lower Water Usage Than Peers in Similar Households",
+                message: `Well done! Your water usage is ${pecentageOfWaterUsage.toFixed(2)}%  lower than the average household of similar size. Keep up the efficient habits, and you may inspire others in your community to do the same.`
             });
         }
     }
@@ -254,6 +307,7 @@ class RecommendationEngine {
             if(recommendationObj[0]){
                 if(recommendationObj[0].isArchived){
                     recommendationObj[0].isArchived = false;
+                    recommendationObj[0].message = data.message;
                     recommendation = updateRecommendation(recommendationObj[0]);
                 }
             }

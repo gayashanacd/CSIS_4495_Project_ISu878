@@ -1206,6 +1206,13 @@
   .form-buttons {
     margin-right: 10px;;
   }
+  .card-green {
+    background-color: #eff9e5 !important;;
+  }
+  .card-red {
+    background-color: #f9e6e5 !important;;
+  }
+
 
   /*--------------------------------------------------------------
   # Footer

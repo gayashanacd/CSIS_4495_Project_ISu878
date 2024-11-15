@@ -14,7 +14,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-4" v-for="(item) in recommendations" :key="item._id">
-                    <div class="card">
+                    <div :class="$util.recommendationCardClass(item)">
                         <div class="card-body">
                             <h5 class="card-title"> {{ item.title }} </h5>
                             <div style="float: right; margin-top: -50px;">

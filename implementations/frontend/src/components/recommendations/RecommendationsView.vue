@@ -30,7 +30,7 @@
                                     <PatternBased />    
                                 </div>
                                 <div class="tab-pane fade" id="comparative-feedback" role="tabpanel" aria-labelledby="comparative-feedback-tab">
-                                    <!-- <WasteManagementEntry />       -->
+                                    <ComparativeBased />      
                                 </div>
                                 <div class="tab-pane fade" id="context-aware" role="tabpanel" aria-labelledby="context-aware-tab">
                                     <!-- <WasteManagementEntry />       -->
@@ -47,6 +47,7 @@
 
 import BenchmarksBased from '@/components/recommendations/BenchmarksBased.vue';
 import PatternBased from '@/components/recommendations/PatternBased.vue';
+import ComparativeBased from '@/components/recommendations/ComparativeBased.vue';
 
 export default {
     name: "RecommendationsView",
@@ -56,7 +57,8 @@ export default {
     },
     components: {
         BenchmarksBased,
-        PatternBased
+        PatternBased,
+        ComparativeBased
     },
     methods: {
 

@@ -36,6 +36,15 @@ router.route("/getUser/:id")
             .catch((err) => res.status(400).json("Error: " + err));
     });
 
+export const getUser = async (userId) => {
+    try {
+        const user = await User.findById(userId);
+        return user;
+    } catch (error) {
+        throw new Error("Failed to fetch user: " + error.message);
+    }
+};
+
 router.route('/register').post(async (req, res) => {
     try {
         const userName = req.body.userName;

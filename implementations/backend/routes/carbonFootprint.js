@@ -161,4 +161,28 @@ export const calculateDailyAverageElectricityUsage = async (userId) => {
     }
 };
 
+export const calculateDailyAverageCarbonFootprint = async (user, userId) => {
+    try {
+        // get citywise carbon footprint 
+        const footprints = await CarbonFootprint.find({city: user.city});
+        const totalCityFootprint = footprints.reduce((total, entry) => {
+            const dailyTotal = (entry.carbonEmissionsEnergy || 0) + (entry.transportEmissions || 0) + (entry.homeEnergyEmissions || 0);
+            return total + dailyTotal;
+        }, 0);
+        const averageCityFootprint = footprints.length ? (totalCityFootprint / footprints.length) : 0;
+
+        const userFootprints = footprints
+            .filter(entry => entry.userId === userId && entry.userId !== undefined);
+        const totalUserFootprint = userFootprints.reduce((total, entry) => {
+            const dailyTotal = (entry.carbonEmissionsEnergy || 0) + (entry.transportEmissions || 0) + (entry.homeEnergyEmissions || 0);
+            return total + dailyTotal;
+        }, 0);
+        const averageUserFootprint = userFootprints.length ? (totalUserFootprint / userFootprints.length) : 0;
+        
+        return { averageCityFootprint : averageCityFootprint, averageUserFootprint : averageUserFootprint};
+    } catch (error) {
+        throw new Error("Failed to calculate daily average electricity usage: " + error.message);
+    }
+};
+
 export default router;

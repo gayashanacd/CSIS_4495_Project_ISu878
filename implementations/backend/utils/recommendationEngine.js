@@ -27,7 +27,7 @@ import { createRecommendation, checkDuplicate, updateRecommendation } from '../r
 import { getLastWeekCarbonFootprint, calculateDailyAverageElectricityUsage, calculateDailyAverageCarbonFootprint } from '../routes/carbonFootprint.js';
 import { getLastWeekWaterUsage, getDayWiseWaterUsage, calculateDailyAverageWaterUsage } from '../routes/waterUsage.js';
 import { getLastWeekWasteData } from '../routes/wasteManagement.js';
-import { getUser } from '../routes/users.js';
+import { getUser, getAllUserIds } from '../routes/users.js';
 
 const BENCHMARKS = {
     carbonFootprint: 77,  // Average kg CO₂ per person per year in worldwide is 4000
@@ -43,18 +43,28 @@ const CANADIAN_BENCHMARKS = {
     electricUsage : 25          // Average daily usage during other seasons except winter
 };
 
+const CONTEXT_AWARE_BENCHMARKS = {
+    worldEarthDay: "04-22",  
+    winterSeason: {start : "11-15", end : "03-31"},    // North america
+    summerSeason: {start : "06-01", end : "08-31"},    // North america
+    plasticFreeJuly : "07"     
+};
+
 class RecommendationEngine {
 
     constructor(userId) {
         this.userId = userId;
         this.user = null;
+        this.userIds = [];
     }
 
     async init(){
         this.user = await getUser(this.userId);
+        this.userIds = await getAllUserIds();
         this.generateBenchmarkRecommendations();
         this.generatePatternRecommendations();
         this.generateComperativeRecommendations();
+        this.generateContextAwareRecommendations();
     }
 
     async generateBenchmarkRecommendations(){
@@ -250,6 +260,74 @@ class RecommendationEngine {
                 category : "good",
                 title: "Lower Water Usage Than Peers in Similar Households",
                 message: `Well done! Your water usage is ${pecentageOfWaterUsage.toFixed(2)}%  lower than the average household of similar size. Keep up the efficient habits, and you may inspire others in your community to do the same.`
+            });
+        }
+    }
+
+    async generateContextAwareRecommendations(){
+        const currentYear = new Date().getFullYear();
+        const nextYear = currentYear + 1;
+
+        // World earth day recommendations - trigger week before 
+        // Define Earth Day
+        const earthDay = new Date(`${currentYear}-${CONTEXT_AWARE_BENCHMARKS.worldEarthDay}`);
+
+        // Get current date (ignoring time)
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
+
+        // Calculate the start of the 1-week window
+        const oneWeekBeforeEarthDay = new Date(earthDay);
+        oneWeekBeforeEarthDay.setDate(earthDay.getDate() - 7);
+
+        // Check if the current date is within the 1-week range
+        if (currentDate >= oneWeekBeforeEarthDay && currentDate < earthDay) {
+            this.gerenerateForAllUsers(
+                "Prepare for Earth Day !",
+                "Earth Day is coming up! Find a community cleanup or tree-planting event near you to make a tangible impact. Every small action adds up to a healthier planet."
+            );
+        } 
+
+        // Winter season recommendations
+        // Define the start and end dates of the winter season
+        const winterStart = new Date(`${currentYear}-${CONTEXT_AWARE_BENCHMARKS.winterSeason.start}`);
+        const winterEnd = new Date(`${nextYear}-${CONTEXT_AWARE_BENCHMARKS.winterSeason.end}`);
+
+        // Check if the current date is within the winter season
+        if (currentDate >= winterStart && currentDate <= winterEnd) {
+            this.gerenerateForAllUsers(
+                "Reduce Heating Costs This Winter",
+                "With winter approaching, consider insulating windows and doors to reduce heat loss. You’ll save energy, lower your carbon footprint, and cut utility bills."
+            );
+        } 
+
+        // Summer season recommendations
+        // Define the start and end dates of the summer season
+        const summerStart = new Date(`${currentYear}-${CONTEXT_AWARE_BENCHMARKS.summerSeason.start}`);
+        const summerEnd = new Date(`${nextYear}-${CONTEXT_AWARE_BENCHMARKS.summerSeason.end}`);
+
+        // Check if the current date is within the winter season
+        if (currentDate >= summerStart && currentDate <= summerEnd) {
+            this.gerenerateForAllUsers(
+                "Maximize Savings on Energy This Summer",
+                "As temperatures rise, optimize air conditioning usage by setting thermostats to 78°F when at home and higher when away. Use ceiling fans to stay cool and reduce energy consumption."
+            );
+        } 
+
+    }
+
+    gerenerateForAllUsers(title, message){
+        let recoObj = {
+            type : "context",
+            category : "good"
+        };
+
+        for (const userId of this.userIds) {
+            this.createRecommendation({
+                ...recoObj,
+                userId : userId,
+                title: title,
+                message: message
             });
         }
     }

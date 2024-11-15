@@ -33,7 +33,7 @@
                                     <ComparativeBased />      
                                 </div>
                                 <div class="tab-pane fade" id="context-aware" role="tabpanel" aria-labelledby="context-aware-tab">
-                                    <!-- <WasteManagementEntry />       -->
+                                    <ContextAware />      
                                 </div>
                             </div><!-- End Default Tabs -->
                         </div>
@@ -48,6 +48,7 @@
 import BenchmarksBased from '@/components/recommendations/BenchmarksBased.vue';
 import PatternBased from '@/components/recommendations/PatternBased.vue';
 import ComparativeBased from '@/components/recommendations/ComparativeBased.vue';
+import ContextAware from '@/components/recommendations/ContextAware.vue';
 
 export default {
     name: "RecommendationsView",
@@ -58,7 +59,8 @@ export default {
     components: {
         BenchmarksBased,
         PatternBased,
-        ComparativeBased
+        ComparativeBased,
+        ContextAware
     },
     methods: {
 

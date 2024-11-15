@@ -17,7 +17,7 @@
                         <div class="card-body">
                             <h5 class="card-title"> {{ item.title }} </h5>
                             <div style="float: right; margin-top: -50px;">
-                                <button style="padding: 2px 6px;" type="button" class="btn btn-danger" title="Delete Child" @click="deleteRecommendation(item)"><i class="bi bi-stop-circle"></i></button>   
+                                <button style="padding: 2px 6px;" type="button" class="btn btn-danger" title="Delete Recommendation" @click="deleteRecommendation(item)"><i class="bi bi-stop-circle"></i></button>   
                             </div>
                             {{ item.message }}
                         </div>

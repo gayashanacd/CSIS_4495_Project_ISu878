@@ -20,6 +20,8 @@ import wasteManagement from './routes/wasteManagement.js'
 import waterUsage from './routes/waterUsage.js'
 import carbonFootprint from './routes/carbonFootprint.js'
 import recommendations from './routes/recommendations.js'
+import events from './routes/events.js'
+import feeds from './routes/feeds.js'
 
 // Mount the router middleware at a specific path
 app.use('/api', users);
@@ -27,6 +29,8 @@ app.use('/api', wasteManagement);
 app.use('/api', waterUsage);
 app.use('/api', carbonFootprint);
 app.use('/api', recommendations);
+app.use('/api', events);
+app.use('/api', feeds);
 
 // Connect to MongoDB
 const URI = process.env.ATLAS_URI;

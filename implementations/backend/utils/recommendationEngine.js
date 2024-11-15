@@ -23,6 +23,7 @@
 // For instance, during summer, users could get reminders to reduce energy consumption by setting their air conditioning more efficiently, or during water scarcity periods, 
 // users could receive additional tips on conserving water.
 
+import { createFeed, checkFeeduplicate, updateFeed } from '../routes/feeds.js';
 import { createRecommendation, checkDuplicate, updateRecommendation } from '../routes/recommendations.js';
 import { getLastWeekCarbonFootprint, calculateDailyAverageElectricityUsage, calculateDailyAverageCarbonFootprint } from '../routes/carbonFootprint.js';
 import { getLastWeekWaterUsage, getDayWiseWaterUsage, calculateDailyAverageWaterUsage } from '../routes/waterUsage.js';
@@ -91,6 +92,12 @@ class RecommendationEngine {
                 title: "Great Job on Carbon Savings!",
                 message: "You're maintaining a carbon footprint below the Canadian average. Keep up the sustainable habits!"
             });
+
+            this.createFeed({
+                userId : this.userId,
+                title: `${this.user.name} is maintaining a carbon footprint below the Canadian average !`,
+                uniqueId: `${this.userId}_maintaining_a_carbon_footprint_below_the_Canadian_average`
+            });
         }
 
         // Water Usage
@@ -111,6 +118,12 @@ class RecommendationEngine {
                 title: "Efficient Water Usage",
                 message: "Your water usage is below the Canadian average. Keep conserving water to support sustainable usage!"
             });
+
+            this.createFeed({
+                userId : this.userId,
+                title: `${this.user.name} is maintaining a water usage is below the Canadian average !`,
+                uniqueId: `${this.userId}_maintaining_a_water_usage_below_the_Canadian_average`
+            });
         }
 
         // Waste Generation
@@ -130,6 +143,12 @@ class RecommendationEngine {
                 category : "good",
                 title: "Excellent Waste Management",
                 message: "You're generating less waste than the average. Keep practicing waste reduction techniques!"
+            });
+
+            this.createFeed({
+                userId : this.userId,
+                title: `${this.user.name} is generating less waste than the average !`,
+                uniqueId: `${this.userId}_generating_less_waste_than_the_average`
             });
         }
     }
@@ -193,6 +212,12 @@ class RecommendationEngine {
                 title: "Improvement in Waste Reduction!",
                 message: `You’ve reduced your waste output by ${pecentageOfWaste}% over the last week! To continue this positive trend, consider composting food scraps or opting for reusable items. Let’s aim to keep reducing even more!`
             });  
+
+            this.createFeed({
+                userId : this.userId,
+                title: `${this.user.name} reduced his/her waste output by ${pecentageOfWaste}% over the last week!`,
+                uniqueId: `${this.userId}_reduced_waste_output_over_the_last_week`
+            });
         }
 
         // Recommendations for Daily Electricity Use 
@@ -211,6 +236,12 @@ class RecommendationEngine {
                 category : "good",
                 title: "Daily Electricity Use is Below Benchmark",
                 message: "Your electricity usage is consistently lower than average—great job! Maintaining energy-efficient habits like turning off lights when not needed and using eco-friendly appliance settings helps keep your consumption low. Your efforts make a positive impact on reducing your carbon footprint!"
+            });
+
+            this.createFeed({
+                userId : this.userId,
+                title: `${this.user.name}'s electricity usage is consistently lower than average—great job!`,
+                uniqueId: `${this.userId}_electricity_usage_is_consistently_lower`
             });
         }
     }
@@ -240,6 +271,12 @@ class RecommendationEngine {
                 title: "Below Average Carbon Footprint for Your City",
                 message: `Your carbon footprint is ${pecentageOfCarbonFootprint.toFixed(2)}% lower than the average in your area. Great work! Continuing to use energy-efficient appliances and minimizing car travel keeps your emissions lower than most nearby. Keep up the eco-friendly habits!`
             });
+
+            this.createFeed({
+                userId : this.userId,
+                title: `${this.user.name}'s carbon footprint is ${pecentageOfCarbonFootprint.toFixed(2)}% lower than the average in his/her area.`,
+                uniqueId: `${this.userId}_carbon_footprint_is_lower_than_the_average_in_his/her_area`
+            });
         }
 
         // Recommendations household wise average water usage campared to user
@@ -260,6 +297,12 @@ class RecommendationEngine {
                 category : "good",
                 title: "Lower Water Usage Than Peers in Similar Households",
                 message: `Well done! Your water usage is ${pecentageOfWaterUsage.toFixed(2)}%  lower than the average household of similar size. Keep up the efficient habits, and you may inspire others in your community to do the same.`
+            });
+
+            this.createFeed({
+                userId : this.userId,
+                title: `${this.user.name}'s water usage is ${pecentageOfWaterUsage.toFixed(2)}%  lower than the average household of similar size. Well done !`,
+                uniqueId: `${this.userId}_water_usage_is_lower_than_the_average_household`
             });
         }
     }
@@ -400,10 +443,28 @@ class RecommendationEngine {
         }
     }
 
-    // Additional methods can be added here as needed
-    async fetchRecommendations(userId) {
-        // Fetch recommendations based on userId or other criteria
-        // Placeholder code - implement as needed
+    // Method to create a feed
+    async createFeed(data) {
+        try {
+            let feed = null;
+            const feedObj = await checkFeeduplicate({
+                userId : data.userId,
+                uniqueId : data.uniqueId
+            });
+            if(feedObj[0]){
+                feedObj[0].isArchived = false;
+                feedObj[0].title = data.title;
+                feed = updateFeed(feedObj[0]);
+            }
+            else {
+                feed = await createFeed(data);
+            }
+            
+            return feed;
+        } catch (error) {
+            console.error("Error creating / updating feed:", error.message);
+            throw error;
+        }
     }
 }
 

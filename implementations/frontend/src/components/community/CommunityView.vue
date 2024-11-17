@@ -37,11 +37,6 @@
                             </div> 
                         </div>
                     </div>
-                </div> 
-            </div>
-
-            <div class="row" style="margin-top: 20px;">
-                <div class="col-lg-6">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Active Challenges / Events</h5>
@@ -57,9 +52,20 @@
                             </div> 
                         </div>
                     </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Gamification Leaderboard <span> | Based on last week stats</span></h5>
+                            <div class="activity">
+                                <div class="activity-item d-flex" v-for="(event) in userEvents" :key="event._id">
+                                    <div class="activity-content">
+                                        {{ event.title }}  
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
                 </div> 
             </div>
-
         </section>
     </div>
 </template>

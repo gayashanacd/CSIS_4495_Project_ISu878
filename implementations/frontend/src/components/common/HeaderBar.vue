@@ -57,7 +57,7 @@
 
                     <li class="message-item" v-for="item in notifications" :key="item.id">
                         <a href="#" @click="updateNotification(item)">
-                            <img src="@/assets/profile-img.jpg" alt="Profile" class="rounded-circle">
+                            <img src="@/assets/indi.jpg" alt="Profile" class="rounded-circle">
                             <div>
                                 <h4>{{ item.senderName }}</h4>
                                 <p>{{ item.message }}</p>
@@ -80,7 +80,7 @@
                 <li class="nav-item dropdown pe-3">
 
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img src="@/assets/profile-img.jpg" alt="Profile" class="rounded-circle">
+                    <img :src="profileImage" alt="Profile" class="rounded-circle">
                     <span class="d-none d-md-block dropdown-toggle ps-2">{{ $util.getUser() && $util.getUser().userName }}</span>
                 </a><!-- End Profile Iamge Icon -->
 
@@ -190,6 +190,13 @@ export default {
         },
         profileRouterPath(){
             return "/profile";  
+        },
+        profileImage(){
+            let image = 'avatar';
+            if(this.$util.getUser())
+                image = this.$util.getUser().userName; 
+
+            return require(`@/assets/${image}.jpg`);
         }
     },
     mounted() {   

@@ -11,6 +11,10 @@ class RecommendationService{
     archiveRecommendation(data){
         return http.put(`/recommendation/${data._id}`, data);
     }
+
+    getLeaderboard(){
+        return http.get(`/getLeaderboardInfo`);
+    }
 }
 
 export default new RecommendationService();

@@ -2,6 +2,7 @@ import express from 'express';
 const router = express.Router();
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import Gamification from '../utils/gamification.js';
 
 const userSchema = new mongoose.Schema({
     userName: { type: String, required: true },
@@ -131,7 +132,6 @@ router.route("/user/:id")
             .catch((err) => res.status(400).json("Error: " + err));
     });
 
-
 router.route("/login")
     .post(async (req, res) => {
         try {
@@ -167,12 +167,32 @@ router.route("/login")
         }
     });
 
+
+router.route("/getLeaderboardInfo").get(async (req, res) => {
+    try {
+        const gamification = new Gamification();
+        const leaderboard = await gamification.init();
+        res.json(leaderboard);
+    } catch (error) {
+        res.status(500).json({ message: "Failed to retrieve leaderboard:", error: error.message });
+    }         
+});
+
 export const getAllUserIds = async () => {
     try {
         const users = await User.find({}, { _id: 1 }); 
         return users.map(user => user._id.toString()); 
     } catch (error) {
         throw new Error("Failed to retrieve user IDs: " + error.message);
+    }
+};
+
+export const getAllUsers = async () => {
+    try {
+        const users = await User.find({}, '_id name userName');
+        return users;
+    } catch (error) {
+        throw new Error("Failed to retrieve users" + error.message);
     }
 };
 

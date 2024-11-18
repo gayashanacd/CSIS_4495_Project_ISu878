@@ -56,9 +56,11 @@
                         <div class="card-body">
                             <h5 class="card-title">Gamification Leaderboard <span> | Based on last week stats</span></h5>
                             <div class="activity">
-                                <div class="activity-item d-flex" v-for="(event) in userEvents" :key="event._id">
+                                <div class="activity-item d-flex" v-for="(item) in leaderboard" :key="item.userId">
                                     <div class="activity-content">
-                                        {{ event.title }}  
+                                        {{ item.title }} : 
+                                        <span style="font-weight:bold; margin-left: 20px">{{ item.name}}</span>  
+                                        <img style="max-height: 36px; margin-left: 20px" :src="profileImage(item.userName)" alt="Profile" class="rounded-circle">
                                     </div>
                                 </div>
                             </div> 
@@ -74,6 +76,7 @@
 
 import EventService from "@/services/EventService";
 import FeedService from "@/services/FeedService";
+import RecommendationService from "@/services/RecommendationService";
 
 export default {
     name: "CommunityView",
@@ -81,7 +84,8 @@ export default {
         return {
             events : [],
             feeds : [],
-            userEvents : []
+            userEvents : [],
+            leaderboard : []
         };
     },
     methods: {
@@ -127,6 +131,19 @@ export default {
                     console.log("feeds >> ", response.data);
                     if(response.data.length > 0){
                         this.feeds = response.data;
+                    }
+                })
+                .catch(e => {
+                    console.log(e.response.data);
+                });
+        },
+        fetchLeadeboard(){
+            this.leaderboard = [];
+            RecommendationService.getLeaderboard()
+                .then(response => {       
+                    console.log("leaderboard >> ", response.data);
+                    if(response.data.length > 0){
+                        this.leaderboard = response.data;
                     }
                 })
                 .catch(e => {
@@ -195,12 +212,19 @@ export default {
                 .catch(e => {
                     console.log(e.response.data);
                 });
+        },
+        profileImage(userName){
+            let image = 'avatar';
+            if(userName)
+                image = userName; 
+            return require(`@/assets/${image}.jpg`);
         }
     },
     mounted() {   
         this.fetchEvents();
         this.fetchUserEvents();
         this.fetchFeeds();
+        this.fetchLeadeboard();
     }
 };
 </script>

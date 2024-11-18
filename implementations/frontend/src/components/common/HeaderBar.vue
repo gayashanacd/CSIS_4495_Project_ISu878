@@ -195,7 +195,6 @@ export default {
             let image = 'avatar';
             if(this.$util.getUser())
                 image = this.$util.getUser().userName; 
-
             return require(`@/assets/${image}.jpg`);
         }
     },

@@ -65,10 +65,10 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Home Enery Use</h5>
+            <h5 class="card-title">Home Energy Use</h5>
             <div class="row">
                 <div class="col-md-3">
-                    <label for="inputHomeEnerySourceEntry" class="form-label">Enery Source</label>
+                    <label for="inputHomeEnerySourceEntry" class="form-label">Energy Source</label>
                     <select id="inputHomeEnerySourceEntry" class="form-select" v-model="homeData.enerySource">
                         <option selected value="Electricity">Electricity (Grid)</option>
                         <option value="SolarPower">Solar Power</option>

@@ -85,6 +85,8 @@ public class LoginActivity extends AppCompatActivity {
                                 editor.putString("USERIMAGE", user.getImagePath());
                                 editor.putString("MONGOID", user.getMongoId());
                                 editor.putBoolean("IS_LOGGED", true);
+                                editor.putString("CITY", user.getCity());
+                                editor.putInt("HOUSEHOLD_SIZE", user.getHouseholdSize());
                                 editor.apply();
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             }

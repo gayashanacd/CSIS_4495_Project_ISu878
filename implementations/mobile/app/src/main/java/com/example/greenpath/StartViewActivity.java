@@ -71,6 +71,8 @@ public class StartViewActivity extends AppCompatActivity {
         editor.putString("USERNAME", "");
         editor.putString("PASSWORD", "");
         editor.putString("MONGOID", "");
+        editor.putString("CITY", "");
+        editor.putInt("HOUSEHOLD_SIZE", 1);
 
         boolean isFirstRun = true;
         isFirstRun = settings.getBoolean("FIRST_RUN", true);
@@ -101,7 +103,15 @@ public class StartViewActivity extends AppCompatActivity {
             }
             while ((inputLine = reader.readLine()) != null){
                 String[] eachUserFields = inputLine.split(",");
-                User eachUser = new User(eachUserFields[0],eachUserFields[1],eachUserFields[2], Boolean.parseBoolean(eachUserFields[3]), eachUserFields[4]);
+                User eachUser = new User(
+                        eachUserFields[0],
+                        eachUserFields[1],
+                        eachUserFields[2],
+                        Boolean.parseBoolean(eachUserFields[3]),
+                        eachUserFields[4],
+                        eachUserFields[5],
+                        Integer.parseInt(eachUserFields[6])
+                );
                 users.add(eachUser);
             }
         }

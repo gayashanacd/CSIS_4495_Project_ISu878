@@ -25,6 +25,14 @@ public class User {
     @ColumnInfo(name = "mongoid")
     private String mongoId;
 
+    @NonNull
+    @ColumnInfo(name = "city")
+    private String city;
+
+    @NonNull
+    @ColumnInfo(name = "householdSize")
+    private int householdSize;
+
     @ColumnInfo(name = "firstName")
     private String firstName;
 
@@ -60,12 +68,31 @@ public class User {
         this.password = password;
     }
 
-    public User(@NonNull String id, @NonNull String userName, @NonNull String password, boolean isAdmin, @NonNull String mongoid) {
+    public User(@NonNull String id, @NonNull String userName, @NonNull String password, boolean isAdmin, @NonNull String mongoid, @NonNull String city, @NonNull int householdSize) {
         this.id = id;
         this.userName = userName;
         this.password = password;
         this.isAdmin = isAdmin;
         this.mongoId = mongoid;
+        this.city = city;
+        this.householdSize = householdSize;
+    }
+
+    @NonNull
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(@NonNull String city) {
+        this.city = city;
+    }
+
+    public int getHouseholdSize() {
+        return householdSize;
+    }
+
+    public void setHouseholdSize(int householdSize) {
+        this.householdSize = householdSize;
     }
 
     public String getImagePath() {

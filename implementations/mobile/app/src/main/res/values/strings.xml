@@ -25,6 +25,7 @@
     <string name="label_carbon_usage_electricity">Usage (kWh)</string>
     <string name="label_carbon_usage_gas">Gas (m3)</string>
     <string name="label_submit">Submit</string>
+    <string name="label_date">Date</string>
 
     <string-array name="mode_of_transport_items">
         <item>Bus</item>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.dashboard.DashboardFragment">
+
+    <TextView
+        android:id="@+id/textViewFootPrint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/title_dashboard_total_footprint"
+        app:layout_constraintStart_toEndOf="@+id/imageViewTotalCarbon"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDateSelector" />
+
+    <TextView
+        android:id="@+id/textViewFootPrintKgCO2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/title_dashboard_footprint_kgco2"
+        app:layout_constraintStart_toEndOf="@+id/textViewValTotalCarbon"
+        app:layout_constraintTop_toBottomOf="@+id/textViewFootPrint" />
+
+    <TextView
+        android:id="@+id/textViewDateSelector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:inputType="date"
+        android:minHeight="48dp"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints,SpeakableTextPresentCheck" />
+
+    <ImageView
+        android:id="@+id/buttonNextDay"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/baseline_arrow_circle_right_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/buttonPreviousDay"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/baseline_arrow_circle_left_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewValTotalCarbon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/value_dashboard_total_footprint"
+        android:textColor="@color/teal_700"
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@+id/imageViewTotalCarbon"
+        app:layout_constraintTop_toBottomOf="@+id/textViewFootPrint" />
+
+    <ImageView
+        android:id="@+id/imageViewTotalCarbon"
+        android:layout_width="70dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/total_carbon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDateSelector" />
+
+    <ImageView
+        android:id="@+id/imageViewTransportCarbon"
+        android:layout_width="70dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/transport_emission"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewTotalCarbon" />
+
+    <TextView
+        android:id="@+id/textViewTransportEmission"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/title_dashboard_transport_emission"
+        app:layout_constraintStart_toEndOf="@+id/imageViewTransportCarbon"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewTotalCarbon" />
+
+    <TextView
+        android:id="@+id/textViewValTransportEmission"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/value_dashboard_transport_emission"
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@+id/imageViewTransportCarbon"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTransportEmission" />
+
+    <TextView
+        android:id="@+id/textViewTransportkgco2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/title_dashboard_footprint_kgco2"
+        app:layout_constraintStart_toEndOf="@+id/textViewValTransportEmission"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTransportEmission" />
+
+    <ImageView
+        android:id="@+id/imageViewEnergyEmission"
+        android:layout_width="70dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/energy_emission"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewTransportCarbon" />
+
+    <TextView
+        android:id="@+id/textViewEnergyEmission"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/title_dashboard_energy_emission"
+        app:layout_constraintStart_toEndOf="@+id/imageViewEnergyEmission"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewTransportCarbon" />
+
+    <TextView
+        android:id="@+id/textViewValEnergyEmission"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/value_dashboard_energy_emission"
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@+id/imageViewEnergyEmission"
+        app:layout_constraintTop_toBottomOf="@+id/textViewEnergyEmission" />
+
+    <TextView
+        android:id="@+id/textViewEnergykgco2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/title_dashboard_footprint_kgco2"
+        app:layout_constraintStart_toEndOf="@+id/textViewValEnergyEmission"
+        app:layout_constraintTop_toBottomOf="@+id/textViewEnergyEmission" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="70dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/waste_emission"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewEnergyEmission" />
+
+    <TextView
+        android:id="@+id/textViewWasteEmission"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/title_dashboard_waste_emission"
+        app:layout_constraintStart_toEndOf="@+id/imageView5"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewEnergyEmission" />
+
+    <TextView
+        android:id="@+id/textViewValWasteEmission"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/value_dashboard_waste_emission"
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@+id/imageView5"
+        app:layout_constraintTop_toBottomOf="@+id/textViewWasteEmission" />
+
+    <TextView
+        android:id="@+id/textViewWastekgco2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/title_dashboard_footprint_kgco2"
+        app:layout_constraintStart_toEndOf="@+id/textViewValWasteEmission"
+        app:layout_constraintTop_toBottomOf="@+id/textViewWasteEmission" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

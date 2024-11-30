@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_dashboard"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="@string/title_dashboard" />
+
+    <item
+        android:id="@+id/navigation_carbon"
+        android:icon="@drawable/baseline_directions_car_24"
+        android:title="@string/title_carbon" />
+
+<!--    <item-->
+<!--        android:id="@+id/navigation_add"-->
+<!--        android:title=""-->
+<!--        />-->
+
+<!--    <item-->
+<!--        android:id="@+id/navigation_add"-->
+<!--        android:title=""-->
+<!--        android:enabled="false"-->
+<!--        />-->
+
+    <item
+        android:id="@+id/navigation_water"
+        android:icon="@drawable/baseline_bathtub_24"
+        android:title="@string/title_water_entry" />
+
+    <item
+        android:id="@+id/navigation_garbage"
+        android:icon="@drawable/baseline_compost_24"
+        android:title="@string/title_waste_entry" />
+
+    <item
+        android:id="@+id/navigation_settings"
+        android:icon="@drawable/ic_settings_24"
+        android:title="@string/title_settings" />
+
+</menu>

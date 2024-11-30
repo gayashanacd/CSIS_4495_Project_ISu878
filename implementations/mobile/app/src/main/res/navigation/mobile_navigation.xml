@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_dashboard">
+
+    <fragment
+        android:id="@+id/navigation_dashboard"
+        android:name="com.example.greenpath.ui.dashboard.DashboardFragment"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_dashboard" />
+
+    <fragment
+        android:id="@+id/navigation_carbon"
+        android:name="com.example.greenpath.ui.carbon.CarbonInputFragment"
+        android:label="@string/title_carbon"
+        tools:layout="@layout/fragment_carbon" />
+
+    <fragment
+        android:id="@+id/navigation_water"
+        android:name="com.example.greenpath.ui.water.WaterFragment"
+        android:label="@string/title_water_entry"
+        tools:layout="@layout/fragment_water" />
+
+    <fragment
+        android:id="@+id/navigation_garbage"
+        android:name="com.example.greenpath.ui.waste.WasteFragment"
+        android:label="@string/title_waste_entry"
+        tools:layout="@layout/fragment_waste" />
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="com.example.greenpath.ui.settings.SettingsFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_settings" />
+
+</navigation>

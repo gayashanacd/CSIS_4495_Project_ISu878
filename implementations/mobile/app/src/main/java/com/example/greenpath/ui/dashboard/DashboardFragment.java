@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.greenpath.databinding.FragmentDashboardBinding;
+import com.example.greenpath.utils.Config;
 import com.example.greenpath.utils.VolleySingleton;
 
 import org.json.JSONArray;
@@ -40,7 +41,7 @@ public class DashboardFragment extends Fragment {
     String formattedDate, userId, mongoId;
     private RequestQueue requestQueue;
     JSONObject energyObj, wasteObj, waterObj;
-    final String API = "http://10.0.2.2:5000/api/";
+    final String API = Config.API_URL;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

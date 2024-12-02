@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.example.greenpath.utils.Config;
 import com.example.greenpath.utils.EmissionCalculator;
 import com.example.greenpath.utils.VolleySingleton;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -45,7 +46,7 @@ public class CarbonInputFragment extends Fragment {
     private RequestQueue requestQueue;
     String mongoId, formattedDate, city;
     int householdSize;
-    final String API = "http://10.0.2.2:5000/api/";
+    final String API = Config.API_URL;
     private static final String CHARACTERS = "0123456789";
     private static final int ID_LENGTH = 5;
     private static final SecureRandom random = new SecureRandom();

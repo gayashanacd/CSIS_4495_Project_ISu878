@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.greenpath.databases.GreenPathDatabase;
 import com.example.greenpath.databinding.FragmentWaterBinding;
+import com.example.greenpath.utils.Config;
 import com.example.greenpath.utils.EmissionCalculator;
 import com.example.greenpath.utils.VolleySingleton;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -43,7 +44,7 @@ public class WaterFragment extends Fragment {
     private static final SecureRandom random = new SecureRandom();
     String mongoId, formattedDate, city, dayAbbreviation;
     int householdSize;
-    final String API = "http://10.0.2.2:5000/api/";
+    final String API = Config.API_URL;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -66,6 +67,11 @@ public class WaterFragment extends Fragment {
         formattedDate = currentDate.format(formatter);
         binding.editTextDateWaterInput.setText(formattedDate);
         dayAbbreviation = currentDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+        binding.editTextShowerUsage.setText("0");
+        binding.editTextDishwashUsage.setText("0");
+        binding.editTextDrinking.setText("0");
+        binding.editTextLaundryWaterUsed.setText("0");
+        binding.editTextMisc.setText("0");
 
         binding.buttonWaterSubmit.setOnClickListener(new View.OnClickListener() {
             @Override

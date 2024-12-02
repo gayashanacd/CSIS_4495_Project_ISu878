@@ -20,6 +20,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.greenpath.databases.GreenPathDatabase;
 import com.example.greenpath.databinding.FragmentWasteBinding;
 import com.example.greenpath.models.User;
+import com.example.greenpath.utils.Config;
 import com.example.greenpath.utils.EmissionCalculator;
 import com.example.greenpath.utils.VolleySingleton;
 
@@ -43,7 +44,7 @@ public class WasteFragment extends Fragment {
     private RequestQueue requestQueue;
     String mongoId, formattedDate, city;
     int householdSize;
-    final String API = "http://10.0.2.2:5000/api/";
+    final String API = Config.API_URL;
     private static final String CHARACTERS = "0123456789";
     private static final int ID_LENGTH = 5;
     private static final SecureRandom random = new SecureRandom();

@@ -12,7 +12,7 @@
             <div class="col-md-1" style="margin: 5px -15px 5px 0px;">
                  | 
             </div>
-            <div class="col-md-1" style="margin-right: 5px;">
+            <div class="col-md-1" style="margin-right: 8px;">
                 <button type="button" class="btn btn-info"><i class="bi bi-caret-left" @click="changeDay('backward');"></i></button>
             </div>
             <div class="col-md-5" style="margin: 0px;">

@@ -13,6 +13,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:text="@string/title_dashboard_total_footprint"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/imageViewTotalCarbon"
         app:layout_constraintTop_toBottomOf="@+id/textViewDateSelector" />
 
@@ -91,7 +92,7 @@
         android:layout_marginTop="32dp"
         android:src="@drawable/transport_emission"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewTotalCarbon" />
+        app:layout_constraintTop_toBottomOf="@+id/divider5" />
 
     <TextView
         android:id="@+id/textViewTransportEmission"
@@ -101,7 +102,7 @@
         android:layout_marginTop="32dp"
         android:text="@string/title_dashboard_transport_emission"
         app:layout_constraintStart_toEndOf="@+id/imageViewTransportCarbon"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewTotalCarbon" />
+        app:layout_constraintTop_toBottomOf="@+id/divider5" />
 
     <TextView
         android:id="@+id/textViewValTransportEmission"
@@ -166,7 +167,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewEnergyEmission" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/imageViewWasteEmission"
         android:layout_width="70dp"
         android:layout_height="60dp"
         android:layout_marginStart="80dp"
@@ -182,7 +183,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:text="@string/title_dashboard_waste_emission"
-        app:layout_constraintStart_toEndOf="@+id/imageView5"
+        app:layout_constraintStart_toEndOf="@+id/imageViewWasteEmission"
         app:layout_constraintTop_toBottomOf="@+id/imageViewEnergyEmission" />
 
     <TextView
@@ -193,7 +194,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/value_dashboard_waste_emission"
         android:textSize="24sp"
-        app:layout_constraintStart_toEndOf="@+id/imageView5"
+        app:layout_constraintStart_toEndOf="@+id/imageViewWasteEmission"
         app:layout_constraintTop_toBottomOf="@+id/textViewWasteEmission" />
 
     <TextView
@@ -205,5 +206,66 @@
         android:text="@string/title_dashboard_footprint_kgco2"
         app:layout_constraintStart_toEndOf="@+id/textViewValWasteEmission"
         app:layout_constraintTop_toBottomOf="@+id/textViewWasteEmission" />
+
+    <ImageView
+        android:id="@+id/imageViewWaterUsage"
+        android:layout_width="70dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/water_usage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider6" />
+
+    <TextView
+        android:id="@+id/textViewWaterUsage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:text="@string/title_dashboard_water_usage"
+        app:layout_constraintStart_toEndOf="@+id/imageViewWaterUsage"
+        app:layout_constraintTop_toBottomOf="@+id/divider6" />
+
+    <TextView
+        android:id="@+id/textViewValWaterUsage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/value_dashboard_water_usage"
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@+id/imageViewWaterUsage"
+        app:layout_constraintTop_toBottomOf="@+id/textViewWaterUsage" />
+
+    <TextView
+        android:id="@+id/textViewWaterLiters"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/title_dashboard_Liters"
+        app:layout_constraintStart_toEndOf="@+id/textViewValWaterUsage"
+        app:layout_constraintTop_toBottomOf="@+id/textViewWaterUsage" />
+
+    <View
+        android:id="@+id/divider5"
+        android:layout_width="409dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="32dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewFootPrintKgCO2" />
+
+    <View
+        android:id="@+id/divider6"
+        android:layout_width="409dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="32dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewWasteEmission" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

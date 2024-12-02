@@ -17,6 +17,9 @@
     <string name="value_dashboard_energy_emission">0</string>
     <string name="title_dashboard_waste_emission">Waste Emissions </string>
     <string name="value_dashboard_waste_emission">0</string>
+    <string name="title_dashboard_water_usage">Water Usage </string>
+    <string name="value_dashboard_water_usage">0</string>
+    <string name="title_dashboard_Liters">liters</string>
     <string name="title_carbon_transport_data">Transport Data</string>
     <string name="label_carbon_mode_transport">Transport Mode</string>
     <string name="label_carbon_distance">Distance (km)</string>
@@ -26,6 +29,21 @@
     <string name="label_carbon_usage_gas">Gas (m3)</string>
     <string name="label_submit">Submit</string>
     <string name="label_date">Date</string>
+    <string name="title_water_shower">Shower / Bath</string>
+    <string name="label_water_bath_usage">Water Used (ltr)</string>
+    <string name="title_water_dishwashing">Dishwashing</string>
+    <string name="label_water_dishwashing_method">Method</string>
+    <string name="title_water_other">Other Water Usage</string>
+    <string name="label_water_drinking">Drinking</string>
+    <string name="label_water_miscellaneous">Miscellaneous</string>
+    <string name="title_water_laundry">Laundry</string>
+    <string name="label_water_laundry_loads">Number of Loads</string>
+    <string name="label_waste_plastic">Plastic (Kg)</string>
+    <string name="label_waste_paper">Paper (Kg)</string>
+    <string name="label_waste_metal">Metal (Kg)</string>
+    <string name="label_waste_organic">Organic (Kg)</string>
+    <string name="label_waste_glass">Glass (Kg)</string>
+    <string name="label_waste_general">General (Kg)</string>
 
     <string-array name="mode_of_transport_items">
         <item>Bus</item>
@@ -40,6 +58,19 @@
         <item>WindPower</item>
         <item>NaturalGas</item>
         <item>HeatingOil</item>
+    </string-array>
+    <string-array name="mode_of_dishwashing">
+        <item>Dishwasher</item>
+        <item>Hand-washing</item>
+    </string-array>
+    <string-array name="mode_of_watering">
+        <item>Hose</item>
+        <item>Sprinkler</item>
+        <item>Drip</item>
+    </string-array>
+    <string-array name="laundry_types">
+        <item>FrontLoad</item>
+        <item>TopLoad</item>
     </string-array>
 
     <string name="title_add">Add Meal</string>

@@ -36,10 +36,10 @@ public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
     SharedPreferences settings;
-    double transport, energy, waste;
+    double transport, energy, waste, water;
     String formattedDate, userId, mongoId;
     private RequestQueue requestQueue;
-    JSONObject energyObj, wasteObj;
+    JSONObject energyObj, wasteObj, waterObj;
     final String API = "http://10.0.2.2:5000/api/";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -113,6 +113,7 @@ public class DashboardFragment extends Fragment {
         waste = 0;
         transport = 0;
         energy = 0;
+        water = 0;
         setData();
 
         ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -121,6 +122,7 @@ public class DashboardFragment extends Fragment {
             public void run() {
                 getEnergyData();
                 getWasteData();
+                getWaterData();
             }
         });
     }
@@ -202,7 +204,7 @@ public class DashboardFragment extends Fragment {
                     public void onResponse(JSONArray response) {
 
                         if (response.length() == 0) {
-                            Log.d("DATA_CAME_EMPTY", "Empty response received");
+                            Log.d("WASTE_DATA_CAME_EMPTY", "Empty response received");
                         } else {
                             // Handle the response
                             try {
@@ -236,6 +238,51 @@ public class DashboardFragment extends Fragment {
         requestQueue.add(jsonArrayRequest);
     }
 
+    private void getWaterData() {
+        String url = API + "getUserWaterEntryForDay?userId=" + mongoId + "&inputDate=" + formattedDate;
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        if (response.length() == 0) {
+                            Log.d("WATER_DATA_CAME_EMPTY", "Empty response received");
+                        } else {
+                            // Handle the response
+                            try {
+                                for (int i = 0; i < response.length(); i++) {
+                                    // Get the current JSON object
+                                    waterObj = response.getJSONObject(i);
+
+                                    if(waterObj != null){
+                                        water = waterObj.getDouble("totalWaterUsage");
+                                        water = Math.round(water * 100.0) / 100.0;
+                                    }
+                                }
+                                setData();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle the error
+                        Toast.makeText(requireContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.d("API_ERROR", error.getMessage());
+                    }
+                }
+        );
+
+        // Add the request to the RequestQueue.
+        requestQueue.add(jsonArrayRequest);
+    }
 
     private String getPlusMinusDates(String position){
         // Parse the date string to LocalDate
@@ -264,11 +311,17 @@ public class DashboardFragment extends Fragment {
 
         // set dashboard data
         Double total = transport + energy + waste;
+        total = Math.round(total * 100.0) / 100.0;
         if(energyObj != null){
             binding.textViewValTotalCarbon.setText(String.valueOf(total));
             binding.textViewValTransportEmission.setText(String.valueOf(transport));
             binding.textViewValEnergyEmission.setText(String.valueOf(energy));
+        }
+        if(wasteObj != null){
             binding.textViewValWasteEmission.setText(String.valueOf(waste));
+        }
+        if(waterObj != null){
+            binding.textViewValWaterUsage.setText(String.valueOf(water));
         }
     }
 

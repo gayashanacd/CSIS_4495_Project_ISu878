@@ -5,8 +5,8 @@
             <div class="col-md-4">
                 <select id="inputDashboardDay" class="form-select"  v-model="searchFilters.timePeriod">
                     <option selected value="Today">Today</option>
-                    <option value="Last Month">Last Month</option>
-                    <option value="Last Year">Last Year</option>
+                    <!-- <option value="Last Month">Last Month</option>
+                    <option value="Last Year">Last Year</option> -->
                 </select> 
             </div>
             <div class="col-md-1" style="margin: 5px -15px 5px 0px;">

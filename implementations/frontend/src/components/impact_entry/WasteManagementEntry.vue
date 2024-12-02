@@ -34,7 +34,7 @@
             </div>
             <div class="row" style="margin-top: 20px;">
                 <div class="col-md-3">
-                    <label for="inputWasteCategery" class="form-label">Categery</label>
+                    <label for="inputWasteCategery" class="form-label">Category</label>
                     <select id="inputWasteCategery" class="form-select"  v-model="wasteInputs.categery">
                         <option selected value="Plastic">Plastic</option>
                         <option value="Paper">Paper</option>

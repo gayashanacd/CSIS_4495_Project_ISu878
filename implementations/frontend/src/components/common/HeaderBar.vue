@@ -26,36 +26,22 @@
                     </a>
                 </li><!-- End Search Icon-->
 
-                <li class="nav-item dropdown">
+                <!-- <li class="nav-item dropdown">
                     <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
                         <i class="bi bi-chat-left-text"></i>
                         <span class="badge bg-success badge-number">{{ notificationsCount }}</span>
-                    </a><!-- End Messages Icon -->
+                    </a>End Messages Icon -->
 
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages" style="width: 350px;">
-                    <li class="dropdown-header">
+                <!-- <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages" style="width: 350px;"> -->
+                    <!-- <li class="dropdown-header">
                         You have {{ notificationsCount }} new messages
-                        <!-- <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a> -->
                     </li>
                     <li>
                         <hr class="dropdown-divider">
-                    </li>
-
-                    <!-- <li class="message-item">
-                    <a href="#">
-                        <img src="@/assets/messages-1.jpg" alt="" class="rounded-circle">
-                        <div>
-                        <h4>Maria Hudson</h4>
-                        <p>Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
-                        <p>4 hrs. ago</p>
-                        </div>
-                    </a>
-                    </li>
-                    <li>
-                    <hr class="dropdown-divider">
                     </li> -->
 
-                    <li class="message-item" v-for="item in notifications" :key="item.id">
+
+                    <!-- <li class="message-item" v-for="item in notifications" :key="item.id">
                         <a href="#" @click="updateNotification(item)">
                             <img src="@/assets/indi.jpg" alt="Profile" class="rounded-circle">
                             <div>
@@ -67,15 +53,11 @@
                     </li>
                     <li>
                     <hr class="dropdown-divider">
-                    </li>
-
-                    <!-- <li class="dropdown-footer">
-                    <a href="#">Show all messages</a>
                     </li> -->
 
-                </ul><!-- End Messages Dropdown Items -->
+                <!-- </ul>
 
-                </li><!-- End Messages Nav -->
+                </li> -->
 
                 <li class="nav-item dropdown pe-3">
 

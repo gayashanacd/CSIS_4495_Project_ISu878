@@ -13,7 +13,7 @@
                                     <button class="nav-link active" id="benchmarks-tab" data-bs-toggle="tab" data-bs-target="#benchmarks" type="button" role="tab" aria-controls="benchmarks" aria-selected="true">Benchmarks</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="pattern-recognition-tab" data-bs-toggle="tab" data-bs-target="#pattern-recognition" type="button" role="tab" aria-controls="pattern-recognition" aria-selected="false">Pattern Recognition</button>
+                                    <button class="nav-link" id="pattern-recognition-tab" data-bs-toggle="tab" data-bs-target="#pattern-recognition" type="button" role="tab" aria-controls="pattern-recognition" aria-selected="false">Historic Data</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link" id="comparative-feedback-tab" data-bs-toggle="tab" data-bs-target="#comparative-feedback" type="button" role="tab" aria-controls="comparative-feedback" aria-selected="false">Comparative Feedback</button>

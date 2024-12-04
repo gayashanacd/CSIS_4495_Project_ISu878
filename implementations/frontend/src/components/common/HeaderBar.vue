@@ -3,7 +3,7 @@
         <header id="header" class="header fixed-top d-flex align-items-center">
             <div class="d-flex align-items-center justify-content-between">
 
-            <router-link class="logo d-flex align-items-center" to="/request">
+            <router-link class="logo d-flex align-items-center" to="/dashboard">
                 <img alt="Logo" src="@/assets/logo.png">
                 <!-- <span class="d-none d-lg-block">LittleLoom Locator</span> -->
             </router-link>

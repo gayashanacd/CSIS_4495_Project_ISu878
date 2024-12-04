@@ -1,11 +1,3 @@
-// https://www.climatewatchdata.org/ghg-emissions?calculation=PER_CAPITA&end_year=2021&regions=CAN&sectors=total-excluding-lucf&start_year=2005
-// https://worldpopulationreview.com/country-rankings/water-consumption-by-country
-// https://www.nature.org/en-us/get-involved/how-to-help/carbon-footprint-calculator/
-// https://www.worldbank.org/en/topic/urbandevelopment/brief/solid-waste-management
-// https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Waste_statistics
-// https://www.statista.com/statistics/689809/per-capital-msw-generation-by-country-worldwide/
-// https://ca.renogy.com/blog/how-many-kwh-does-the-average-home-use/
-
 // 1. recommendations based on benchmarks
 // these values defer with country.
 // these are weekly benchmarks
